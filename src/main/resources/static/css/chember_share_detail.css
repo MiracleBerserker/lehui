@@ -1,0 +1,56 @@
+/* 头部 */
+.header {
+  position: relative;
+  padding: 15px 20px;
+  font-size: 18px;
+  font-weight: 400;
+  text-align: center;
+  background-color: #8275E8;
+  color: #fff;
+}
+.header > img {
+  width: 28px;
+  height: 22px;
+  position: absolute;
+  left: 3%;
+  top: 15px;
+  cursor: pointer;
+}
+.updata {
+  position: absolute;
+  top: 15px;
+  right: 5%;
+  color: #FFCC43;
+}
+
+.share-item {
+  font-size: 12px;
+  background-color: rgba(242, 242, 242, 1);
+  border-radius: 12px;
+  padding: 10px 0;
+  margin: 10px 1px;
+}
+.share-item .userImg {
+  text-align: center;
+}
+.share-item .userImg .img {
+  display: inline-block;
+  width: 60px;
+  height: 60px;
+  border-radius: 50px;
+  background: url('/img/icon/user-portrait.png') center center;
+}
+.share-item .user-name {
+  margin: 5px;
+  text-align: center;
+}
+.share-item p {
+  text-indent: 24px;
+}
+.share-item .title {
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+.share-item .title .time {
+  float: right;
+}

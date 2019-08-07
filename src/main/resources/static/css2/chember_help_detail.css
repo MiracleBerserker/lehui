@@ -1,0 +1,96 @@
+/* 头部 */
+.header {
+  position: relative;
+  padding: 15px 20px;
+  font-size: 18px;
+  font-weight: 400;
+  text-align: center;
+  background-color: #8275E8;
+  color: #fff;
+}
+.header > img {
+  width: 28px;
+  height: 22px;
+  position: absolute;
+  left: 3%;
+  top: 15px;
+  cursor: pointer;
+}
+.updata {
+  position: absolute;
+  top: 15px;
+  right: 5%;
+  color: #FFCC43;
+}
+
+.share-item {
+  font-size: 12px;
+  background-color: rgba(242, 242, 242, 1);
+  border-radius: 12px;
+  padding: 10px 0;
+  margin: 10px 1px;
+}
+
+.help-item {
+  font-size: 12px;
+  background-color: rgba(242, 242, 242, 1);
+  border-radius: 12px;
+  padding: 10px 0;
+  margin: 10px 1px;
+}
+
+.help-item .title {
+  padding-left: 5%;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.project-detail {
+  margin-bottom: 10px;
+}
+
+.help-item .content {
+  padding-left: 5%;
+  font-size: 14px;
+}
+
+.help-item .content .col-xs-2,
+.help-item .content .col-xs-3 {
+  padding: 0;
+  text-align: right;
+}
+
+.help-item .content .col-xs-10 {
+  padding-left: 0;
+  padding-right: 20px;
+}
+
+.help-item .content .addition {
+  padding: 0;
+  font-size: 12px;
+  color: rgb(130, 117, 232);
+  text-align: center;
+}
+
+.content .addition .contract-btn {
+  background-color: rgb(130, 117, 232);
+  color: #fff;
+  text-align: center;
+  padding: 3px;
+  border-radius: 4px;
+}
+.copyphone {
+  color: rgb(130, 117, 232);
+  margin-left: 3px;
+}
+
+@media screen and (min-width: 750px) {
+  .title {
+    text-align: center;
+  }
+
+  .help-item .content .addition {
+    text-align: left;
+  }
+}

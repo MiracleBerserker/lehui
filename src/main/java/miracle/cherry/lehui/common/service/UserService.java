@@ -1,9 +1,9 @@
 package miracle.cherry.lehui.common.service;
 
+import io.swagger.models.auth.In;
 import miracle.cherry.lehui.common.config.MyConfig;
-import miracle.cherry.lehui.common.dao.UnitDao;
-import miracle.cherry.lehui.common.dao.UserDao;
-import miracle.cherry.lehui.common.dao.UserUnitRelDao;
+import miracle.cherry.lehui.common.dao.*;
+import miracle.cherry.lehui.common.entity.RoleUser;
 import miracle.cherry.lehui.common.entity.Unit;
 import miracle.cherry.lehui.common.entity.User;
 import miracle.cherry.lehui.common.entity.UserUnitRel;
@@ -29,7 +29,7 @@ import java.util.UUID;
  * @Description:
  */
 @Transactional//事务管理
-@Service("UserService")
+@Service("userService")
 public class UserService {
 
     @Resource
@@ -38,6 +38,13 @@ public class UserService {
     UnitDao unitDao;
     @Resource
     UserUnitRelDao userUnitRelDao;
+    @Resource
+    PrivilegeDao privilegeDao;
+    @Resource
+    RoleUserDao roleUserDao;
+
+
+
 
     @Resource
     MyConfig myConfig;
@@ -61,28 +68,39 @@ public class UserService {
         if(userDao.findByAccount(user.getAccount()) != null){
             throw new Exception("用户已存在");
         }
+        Integer qyId= user.getQyId();
+        Integer shId = user.getShId();
+        user.setShId(null);
+        user.setQyId(null);
         //保存用户
         user.setState("正常");
+        user.setImg("/img/icon/default.jpg");
         userDao.save(user);
         //保存文件替换地址
-        if(user.getQyId() != null){
-            if(unitDao.findById(user.getQyId()) != null){
-                saveUURel(user.getQyId(),user.getId(),"审核中");
+        if(qyId != null){
+            if(unitDao.findById(qyId) != null){
+                saveUURel(qyId,user.getId(),"审核中");
             }else {
                 throw new Exception("找不到申请的企业");
             }
-        }else if(user.getShId() != null){
-            if(unitDao.findById(user.getShId()) != null){
-                saveUURel(user.getShId(),user.getId(),"审核中");
+        }else if(shId != null){
+            if(unitDao.findById(shId) != null){
+                saveUURel(shId,user.getId(),"审核中");
             }else {
                 throw new Exception("找不到申请的商会");
             }
         }else if(user.getQy() != null){
+//            if(unitDao.findByCode(user.getQy().getCode()) !=null){
+//                throw new Exception("该企业已经注册不能重复注册");
+//            }
             Unit unit = saveUnit(user.getQy(),"企业","审核中");
             saveUURel(unit.getId(),user.getId(),"创建中");
             unit.setArrayFiles(null);
             user.setQy(unit);
         }else if(user.getSh() != null){
+//            if(unitDao.findByCode(user.getSh().getCode()) !=null){
+//                throw new Exception("该商会已经注册不能重复注册");
+//            }
             Unit unit = saveUnit(user.getSh(),"商会","审核中");
             saveUURel(unit.getId(),user.getId(),"创建中");
             unit.setArrayFiles(null);
@@ -128,8 +146,63 @@ public class UserService {
         String fileName = FileTools.getFileName(file.getOriginalFilename());
         String guid = UUID.randomUUID().toString();
         String type = fileName.substring(fileName.lastIndexOf("."));
-        String filePath = String.format("%s%s%s",myConfig.getImgPath(),guid,type);
+        //获取当前日期
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String nowDay = simpleDateFormat.format(new Date());
+        String filePath = String.format("%s%s%s%s%s",myConfig.getImgPath(),nowDay,"/",guid,type);
         FileTools.saveFile(filePath,file.getInputStream());
-        return guid+type;
+        return "/img/"+nowDay+"/"+guid+type;
     }
+
+    public void accept(Integer id,Integer uid,String type){
+        User user = userDao.getOne(uid);
+        //添加对应的角色
+        RoleUser roleUser = new RoleUser();
+        if(type.equals("企业")){
+           user.setQyId(id);
+           roleUser.setrId(1);
+           roleUser.setuId(uid);
+        }else {
+            user.setShId(id);
+            roleUser.setrId(3);
+            roleUser.setuId(uid);
+        }
+        userDao.save(user);
+        roleUserDao.save(roleUser);
+        //删除申请表对应数据
+        userUnitRelDao.deleteByUnitIdAndUserId(id,uid);
+    }
+
+
+    public  void delete(Integer id,Integer uid,String type){
+        //删除申请表对应数据
+        userUnitRelDao.deleteByUnitIdAndUserId(id,uid);
+    }
+
+    public void uploadImg(String img,Integer userId){
+        User user= userDao.getOne(userId);
+        user.setImg(img);
+        userDao.saveAndFlush(user);
+    }
+
+    /**
+     * 修改用户信息
+     * @param user
+     * @return
+     */
+    public User editUser(User user){
+        User userRel = userDao.findById(user.getId()).get();
+        userRel.setName(user.getName());
+        userRel.setMail(user.getMail());
+        userRel.setWechat(user.getWechat());
+        userRel.setPassword(user.getPassword());
+        userRel = userDao.saveAndFlush(userRel);
+        return userRel;
+    }
+
+    public User getUserById(Integer id){
+        User user = userDao.findById(id).get();
+        return user;
+    }
+
 }

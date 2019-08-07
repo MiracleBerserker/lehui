@@ -1,0 +1,79 @@
+/* 公共部分 */
+body {
+    font-family: "Helvetica Neue", Helvetica, Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif;
+    background-color: #F2F2F2;
+}
+input::-webkit-input-placeholder{
+    color:#999;
+}
+input::-moz-placeholder{   /* Mozilla Firefox 19+ */
+    color:#999;
+}
+input:-moz-placeholder{    /* Mozilla Firefox 4 to 18 */
+    color:#999;
+}
+input:-ms-input-placeholder{  /* Internet Explorer 10-11 */ 
+    color:#999;
+}
+
+
+/* 头部 */
+.header {
+    position: relative;
+    padding: 15px 20px;
+    font-size: 18px;
+    font-weight: 400;
+    text-align: center;
+    background-color: #8275E8;
+    color: #fff;
+}
+.header >img {
+    width: 28px;
+    height: 22px;
+    position: absolute;
+    left: 3%;
+    top: 15px;
+    cursor: pointer;
+}
+
+/* 正文内容的区域 */
+.contentBox {
+    width: 100%;
+    background-color: #fff;
+    margin: 10px auto;
+    padding: 0 20px 10px 10px;
+    border-radius: 10px;
+    position: relative;
+}
+/* 表单 */
+.form_item {
+    width: 100%;
+    position: relative;
+    font-size: 16px;
+    padding-top: 10px;
+}
+.info_title {
+    position: absolute;
+    top: 12px;
+    font-weight: 500;
+    color: #333;
+}
+.info-input {
+    margin-left: 33%;
+    width: 67%;
+    text-align: left;
+    border: none;
+    outline: none!important;
+    border-bottom: 1px solid #999;
+}
+/* 更新 */
+.updata {
+    width: 55%;
+    margin: 50px auto 0;
+    padding: 5px 0;
+    border-radius: 15px;
+    text-align: center;
+    background-color: #8275E8;
+    color: #fff;
+    font-size: 16px;
+}

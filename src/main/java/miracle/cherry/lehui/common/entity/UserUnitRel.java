@@ -17,7 +17,7 @@ public class UserUnitRel implements Serializable {
 
     private static final long serialVersionUID = 873513266867320831L;
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
     @Column(length = 50)
     private Integer unitId;

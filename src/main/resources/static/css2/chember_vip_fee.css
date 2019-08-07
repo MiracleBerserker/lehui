@@ -1,0 +1,116 @@
+/* 公共部分 */
+body {
+    font-family: "Helvetica Neue", Helvetica, Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif;
+}
+input::-webkit-input-placeholder{
+    color:#999;
+}
+input::-moz-placeholder{   /* Mozilla Firefox 19+ */
+    color:#999;
+}
+input:-moz-placeholder{    /* Mozilla Firefox 4 to 18 */
+    color:#999;
+}
+input:-ms-input-placeholder{  /* Internet Explorer 10-11 */ 
+    color:#999;
+}
+  /* 选中时候的默认字体颜色 */
+.form_active > div > input::-webkit-input-placeholder{
+    color:#fff;
+}
+.form_active > div > input::-moz-placeholder{   /* Mozilla Firefox 19+ */
+    color:#fff;
+}
+.form_active > div > input:-moz-placeholder{    /* Mozilla Firefox 4 to 18 */
+    color:#fff;
+}
+.form_active > div > input:-ms-input-placeholder{  /* Internet Explorer 10-11 */ 
+    color:#fff;
+}
+
+
+/* 头部 */
+.header {
+    position: relative;
+    padding: 15px 20px;
+    font-size: 18px;
+    font-weight: 400;
+    text-align: center;
+    background-color: #8275E8;
+    color: #fff;
+}
+.header > img {
+    width: 28px;
+    height: 22px;
+    position: absolute;
+    left: 3%;
+    top: 15px;
+    cursor: pointer;
+}
+
+/* 内容 */
+.fee_title {
+    margin: 20px 0;
+    padding-bottom: 5px;
+    font-size: 16px;
+    border-bottom: 1px solid #999;
+}
+.row > div {
+    padding: 0;
+}
+/* 列表内容 */
+.form_group {
+    background-color: #F2F2F2;
+    border-radius: 10px;
+    padding: 10px 0;
+    font-size: 14px;
+    color: #333;
+}
+.form_item {
+    width: 90%;
+    padding: 5px 0;
+    margin: 5px auto;
+    border-radius: 10px;
+}
+/* 选中的时候整个框 */
+.form_active {
+    width: 90%;
+    padding: 5px 0;
+    margin: 5px auto;
+    border-radius: 10px;
+    background-color: #8275E8;
+    color: #fff;
+}
+
+.fee_total > .form_input {
+    color: #999;
+    width: 100%;
+    text-align: right;
+    border: none;
+    text-decoration: underline;
+    background-color: transparent;
+    outline: none!important; 
+}
+/* 选中时的input框 */
+.fee_total > .form_input_active {
+    color: #fff;
+    width: 100%;
+    text-align: right;
+    border: none;
+    background-color: transparent;
+    outline: none!important;
+}
+.form_item > .year {
+    text-align: left;
+    padding-left: 5px;
+}
+/* 缴费情况 */
+.payment {
+    width: 30%;
+    margin: 20px auto;
+    padding: 3px 0;
+    background-color: #8275E8;
+    color: #fff;
+    text-align: center;
+    border-radius: 10px;
+}

@@ -24,6 +24,7 @@ public class MyControllerAdvice {
     @ResponseBody
     @ExceptionHandler(value = Exception.class)
     public String exceptionHandler(Exception ex){
+        ex.printStackTrace();
         return new Result(Result.ERROR,ex.toString(),"程序异常请联系管理员").toJson();
     }
 }

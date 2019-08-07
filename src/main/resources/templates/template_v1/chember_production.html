@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>业务(产品)</title>
+  <meta chartset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- 引入 Bootstrap -->
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+  <title th:text="${unit.name}"></title>
+  <!-- HTML5 Shiv 和 Respond.js 用于让 IE8 支持 HTML5元素和媒体查询 -->
+  <!-- 注意： 如果通过 file://  引入 Respond.js 文件，则该文件无法起效果 -->
+  <!--[if lt IE 9]>
+         <script src="/js/html5shiv.js"></script>
+         <script src="/js/respond.min.js"></script>
+      <![endif]-->
+  <link rel="stylesheet" href="/css/chemer-detail-style.css">
+</head>
+
+<body>
+
+  <div class="container pc-show">
+    <header>
+      <p><a  th:href="@{'/index/'+${unit.id}}" th:text="${unit.name}">重庆乐汇有限公司</a></p>
+      <span class="contract-telephone pc-show">联系电话：<span th:text="${unit.tel}"></span></span>
+    </header>
+  </div>
+
+  <div class="container pc-show">
+    <ul class="nav nav-pills">
+      <li><a th:href="@{'/index/'+${unit.id}+'/products'}">业务(产品)</a></li>
+      <li><a th:href="@{'/index/'+${unit.id}+'/news'}">新闻</a></li>
+      <li><a th:href="@{'/index/'+${unit.id}+'/activities'}">活动</a></li>
+    </ul>
+  </div>
+
+  <div class="header pc-hidden">
+   <img class="return" src="/img/icon/left.png" alt="#" onClick="javascript :history.back(-1);">
+    <div class="assocTitle">业务(产品)</div>
+  </div>
+
+  <div class="container section">
+    <div class="pc-show detail-link">
+      业务(产品)
+    </div>
+    <hr class="pc-show">
+    <div class="production-list">
+      <div class="row text-block production-item col-lg-6" th:each="product:${products}">
+        <div class="col-xs-5 pc-hidden">
+          <img class="img-responsive" th:src="${product.img}" alt="">
+        </div>
+        <div class="col-xs-7 production-info col-lg-12" >
+          <div class="pc-show production-img"><img class="img-responsive" th:src="${product.img}"  alt=""></div>
+          <div class="production-content">
+            <div class="product-name" th:text="${product.title}">乐汇网站</div>
+            <div class="product-detail" th:utext="${product.content}">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </hr>
+  </div>
+
+
+  <div class="scroll-to-top pc-show"><img src="/img/icon/up.png" alt="" onclick="javascript:scrollTo(0,0);"></div>
+
+  <!-- jQuery (Bootstrap 的 JavaScript 插件需要引入 jQuery) -->
+  <script src="/js/jquery.min.js"></script>
+  <!-- 包括所有已编译的插件 -->
+  <script src="/js/bootstrap.min.js"></script>
+  <script>
+    $('.return').bind('click', function () {
+      window.location = './chember_index.html';
+    });
+
+    // //页面滚动到顶部
+    // $('.scroll-to-top').bind('click', function () {
+    //   window.scrollTo({
+    //     left: 0,
+    //     top: 0,
+    //     behavior: 'smooth'
+    //   })
+    // });
+  </script>
+</body>
+
+</html>

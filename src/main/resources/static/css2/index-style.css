@@ -1,0 +1,120 @@
+.carousel {
+  margin: 0 auto;
+  margin-bottom: 10px;
+}
+
+.carousel img {
+  margin: 0 auto;
+}
+
+.nav {
+  background-color: rgba(242, 242, 242, 1);
+  border-radius: 12px;
+  padding: 5px;
+  margin-bottom: 10px;
+}
+
+.nav .title {
+  width: 100%;
+}
+
+.nav .row {
+  margin: 10px;
+}
+
+.first-header {
+  text-align: center;
+  font-size: 18px;
+}
+
+.first-header .line {
+  display: inline-block;
+  width: 25%;
+  height: 2px;
+  background-color: rgba(130, 117, 232, 1);
+  margin: 0 10px;
+  vertical-align: middle;
+}
+
+.nav-buttons,
+.button {
+  text-align: center;
+  cursor: pointer;
+}
+
+.nav-buttons .text {
+  margin: 0;
+}
+
+.source .text {
+  font-size: 10px;
+}
+
+.source .button {
+  margin: 10px 0;
+}
+
+.source {
+  margin-bottom: 60px;
+}
+
+.bottom-nav {
+  position: fixed;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  background-color: rgba(228, 228, 228, 1);
+  font-size: 12px;
+  text-align: center;
+}
+
+.bottom-nav .button-row {
+  margin: 10px 20px 0 20px;
+}
+
+@media screen and (max-width: 750px) {
+  .nav {
+    margin: 0 10px 10px 10px;
+  }
+
+  .nav-buttons img {
+    width: 50px;
+    height: 50px;
+    font-size: 12px;
+  }
+
+  .col-xs-3 img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .bottom-nav img {
+    width: 35px;
+    height: 35px;
+  }
+
+  .source {
+    margin-bottom: 70px;
+  }
+
+  .source {
+    margin-bottom: 60px;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .container img {
+    width: 80px;
+    height: 80px;
+  }
+
+  .source img {
+    width: 80px;
+    height: 80px;
+  }
+
+  .bottom-nav img {
+    width: 40px;
+    height: 40px;
+  }
+}

@@ -15,7 +15,13 @@ import java.io.*;
 public class FileTools {
 
     public static void saveFile(String filePath, InputStream in) throws IOException {
+        System.out.println(filePath);
         File file = new File(filePath);
+        if(!file.getParentFile().exists()){
+            if(!file.getParentFile().mkdir()){
+                throw new IOException("无法创建目录 数据上传失败");
+            }
+        }
         if(!file.exists()){
             file.createNewFile();
         }

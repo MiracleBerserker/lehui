@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>活动详情</title>
+  <meta chartset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- 引入 Bootstrap -->
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- HTML5 Shiv 和 Respond.js 用于让 IE8 支持 HTML5元素和媒体查询 -->
+  <!-- 注意： 如果通过 file://  引入 Respond.js 文件，则该文件无法起效果 -->
+  <!--[if lt IE 9]>
+  <script src="/js/html5shiv.js"></script>
+  <script src="/js/respond.min.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="/css/chemer-detail-style.css">
+</head>
+
+<body>
+  <div class="container pc-show">
+    <header>
+      <p><a th:href="@{'/index/'+${unit.id}}" th:text="${unit.name}"></a></p>
+      <span class="contract-telephone pc-show">联系电话：<span th:text="${unit.tel}"></span></span>
+    </header>
+  </div>
+
+  <div class="container pc-show">
+    <ul class="nav nav-pills">
+      <li><a th:href="@{'/index/'+${unit.id}+'/products'}">业务(产品)</a></li>
+      <li><a th:href="@{'/index/'+${unit.id}+'/news'}">新闻</a></li>
+      <li><a th:href="@{'/index/'+${unit.id}+'/activities'}">活动</a></li>
+    </ul>
+  </div>
+
+  <div class="header pc-hidden">
+    <img class="return" src="/img/icon/left.png" alt="#" onClick="javascript :history.back(-1);">
+    <div class="assocTitle">活动详情</div>
+  </div>
+
+  <div class="container article activity-detail">
+    <div class="pc-show detail-link">
+      <a th:href="@{'/index/'+${unit.id}+'/activities'}">活动</a> > 正文
+      <hr>
+    </div>
+    <div class="article-title" th:text="${activitie.title}"></div>
+    <div class="article-content">
+      <div class="second-title">活动详情</div>
+      <p  th:utext="${activitie.content}"></p>
+      <!--<div class="second-title">活动目的</div>-->
+      <!--<p>透过形式多样、丰富多彩的活动，感受中秋佳节的思乡之情和祝福团圆的完美情感，传承中华民族的传统文化，并在活动中培养参与意识、动手潜力和团结合作精神。</p>-->
+      <div class="row">
+        <div class="col-xs-4">活动时间</div>
+        <div class="col-xs-8" th:text="${activitie.time}"></div>
+      </div>
+      <div class="row">
+        <div class="col-xs-4">活动地点</div>
+        <div class="col-xs-8"  th:text="${activitie.address}"></div>
+      </div>
+      <div class="row">
+        <div class="col-xs-4" >联系人</div>
+        <div class="col-xs-8" th:text="${activitie.fzr}">张三</div>
+      </div>
+      <div class="row">
+        <div class="col-xs-4">联系电话</div>
+        <div class="col-xs-8" th:text="${activitie.tel}">15866556563</div>
+      </div>
+    </div>
+  </div>
+    <div class="scroll-to-top pc-show"><img src="/img/icon/up.png" alt="" onclick="javascript:scrollTo(0,0);"></div>
+
+
+
+    <!-- jQuery (Bootstrap 的 JavaScript 插件需要引入 jQuery) -->
+    <script src="/js/jquery.min.js"></script>
+    <!-- 包括所有已编译的插件 -->
+    <script src="/js/bootstrap.min.js"></script>
+    <script>
+      // $('.return').bind('click', function () {
+      //   window.location = './chember_index.html';
+      // });
+      $(".article-content>img").addClass("img-responsive");
+      //页面滚动到顶部
+      // $('.scroll-to-top').bind('click', function () {
+      //   window.scrollTo({
+      //     left: 0,
+      //     top: 0,
+      //     behavior: 'smooth'
+      //   })
+      // });
+    </script>
+</body>
+
+</html>

@@ -10,6 +10,9 @@ package miracle.cherry.lehui.common.controller;
  */
 public class  CommonUrl {
 
-    public static final String ACCOUNT = "/system/account";
-
+    public static final String ACCOUNT = "/account";
+    public static final String DICTS = "/dicts";
+    public static final String PRIVILEGE = "/system/privilege";
+    public static final String MENU = "/system/menu";
+    public static final String TEMPLATE = "/index";
 }

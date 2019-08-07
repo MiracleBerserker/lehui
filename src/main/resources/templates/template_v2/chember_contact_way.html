@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css2/contact_add-style.css">
+    <!-- HTML5 Shiv 和 Respond.js 用于让 IE8 支持 HTML5元素和媒体查询 -->
+    <!--[if lt IE 9]>
+         <script src="/js/html5shiv.js"></script>
+         <script src="/js/respond.min.js"></script>
+      <![endif]-->
+    <title>提交联系方式</title>
+</head>
+
+<body>
+    <!-- 头部 -->
+    <div class="header">
+       <img src="/img/icon/left.png" alt="#" onClick="javascript :history.back(-1);">
+        <div class="assocTitle">提交联系方式</div>
+    </div>
+    <div class="content">
+        <div class="container">
+            <div class="contentBox">
+                <div class="form_item">
+                    <div class="info_title">姓名：</div>
+                    <input type="text" class="info-input" name="name" id="name">
+                </div>
+                <div class="form_item">
+                    <div class="info_title">商协会：</div>
+                    <input type="text" class="info-input" name="shName" id="shName">
+                </div>
+                <div class="form_item">
+                    <div class="info_title" >企业：</div>
+                    <input type="text" class="info-input" name="qyName" id="qyName">
+                </div>
+                <div class="form_item">
+                    <div class="info_title">我的电话：</div>
+                    <input type="text" class="info-input" name="tel" id="tel">
+                </div>
+                <div class="form_item">
+                    <div class="info_title">微信：</div>
+                    <input type="text" class="info-input" name="weChat" id="weChat">
+                </div>
+                <div class="form_item">
+                    <div class="info_title">邮箱：</div>
+                    <input type="text" class="info-input" name="mail" id="mail" >
+                    <input type="hidden" th:value="${helpId}" name="helpId" id="helpId">
+                </div>
+            </div>
+            <div class="updata" id="submit">提交</div>
+        </div>
+    </div>
+
+
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="/js/jquery.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="/js/bootstrap.min.js"></script>
+    <!--<script src="/js/contact_add.js"></script>-->
+</body>
+<script>
+    $("#submit").on('click',function () {
+        //获取值
+        var name = $("#name").val();
+        var tel = $("#tel").val();
+        var shName = $("#shName").val();
+        var qyName = $("#qyName").val();
+        var weChat = $("#weChat").val();
+        var mail = $("#mail").val();
+        var helpId = $("#helpId").val();
+        if(name===undefined||name===''||tel===undefined||tel===''||weChat===undefined||weChat===''||helpId===undefined||helpId===''){
+            alert("请填写完整的预留信息 好让我们联系你");
+        }else {
+            $.ajax({
+                url: "/account/saveHelpDetail",
+                contentType:'application/json',
+                data: JSON.stringify({
+                    "name":name,
+                    "tel":tel,
+                    "shName":shName,
+                    "helpId":helpId,
+                    "qyName":qyName,
+                    "mail":mail,
+                    "weChat":weChat
+                }),
+                type: "POST",
+                dataType: "json",
+                success: function(data) {
+                    alert("预留成功");
+                     $("#name").val('');
+                     $("#tel").val('');
+                     $("#shName").val('');
+                     $("#qyName").val('');
+                     $("#weChat").val('');
+                     $("#mail").val('');
+                     $("#helpId").val('');
+                }
+            });
+        }
+    });
+</script>
+</html>

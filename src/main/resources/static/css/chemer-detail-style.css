@@ -1,0 +1,384 @@
+.header {
+  position: relative;
+  padding: 15px 20px;
+  font-size: 18px;
+  font-weight: 400;
+  text-align: center;
+  background-color: #8275E8;
+  color: #fff;
+}
+
+.header  > img {
+  width: 28px;
+  height: 22px;
+  position: absolute;
+  left: 3%;
+  top: 15px;
+  cursor: pointer;
+}
+
+.article-title {
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.article-content p {
+  text-indent: 24px;
+}
+
+.article-img img {
+  display: inline-block;
+}
+
+.article-img div {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.text-block {
+  font-size: 12px;
+  background-color: rgba(242, 242, 242, 1);
+  border-radius: 12px;
+  padding: 10px 20px;
+  margin: 5px 1px;
+}
+
+.section {
+  margin-bottom: 10px;
+}
+
+.membership-list p {
+  margin: 0;
+}
+
+.search {
+  position: relative;
+  text-align: center;
+}
+
+.search .searchImg {
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  left: 23%;
+}
+
+.search input {
+  width: 50%;
+  font-size: 12px;
+}
+
+input {
+  font-size: 16px;
+  color: #222;
+  background-color: transparent;
+  border: none;
+  outline: none !important;
+}
+
+.second-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.activity-detail .col-xs-4 {
+  margin-bottom: 5px;
+}
+
+.activity-item {
+  padding: 10px 5px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.activity-item .col-xs-7,
+.activity-item .col-xs-5 {
+  font-size: 12px;
+  padding: 5px;
+}
+
+.active-info {
+  color: rgb(51, 51, 51);
+}
+
+.activity-item .title {
+  color: rgb(102, 102, 102);
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.active-info span {
+  margin-left: 5px;
+  color: rgb(102, 102, 102);
+}
+
+.news-item {
+  padding: 10px 5px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.news-item .col-xs-7,
+.news-item .col-xs-5 {
+  font-size: 12px;
+  padding: 5px;
+}
+
+.news-info {
+  color: rgb(51, 51, 51);
+}
+
+.news-item .title {
+  color: rgb(102, 102, 102);
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.news-info span {
+  margin-left: 5px;
+  color: rgb(102, 102, 102);
+}
+
+.production-item {
+  padding: 10px 5px;
+  margin-bottom: 10px;
+}
+
+.production-list .production-item .col-xs-7,
+.production-list .production-item .col-xs-5 {
+  padding: 5px;
+}
+.production-item .production-info .product-name {
+  font-size: 14px;
+}
+
+@media screen and (min-width: 750px) {
+  .activity-item .title {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+
+  .activity-item div {
+    margin-bottom: 10px;
+  }
+
+  .activity-item .col-xs-7 {
+    font-size: 16px;
+    padding-left: 30px;
+  }
+}
+
+.pc-show {
+  display: none;
+}
+@media screen and (max-width: 1080px) {
+  .nav-pills .mobile-hidden {
+    display: none;
+  }
+}
+@media screen and (min-width: 1080px) {
+  .pc-show {
+    display: block;
+  }
+
+  .pc-hidden {
+    display: none;
+  }
+
+  .nav .pc-hidden {
+    display: none;
+  }
+
+  /* 头部与导航 */
+  header p {
+    font-size: 30px;
+  }
+
+  header {
+    padding-top: 10px;
+    font-size: 24px;
+    font-weight: 700;
+    position: relative
+  }
+  header p a {
+    color: #000;
+    text-decoration: none;
+  }
+  header p a:hover, header p a:focus {
+    color: #000;
+    text-decoration: none;
+  }
+
+  .contract-telephone {
+    position: absolute;
+    right: 0;
+    top: 25px;
+    width: 20%;
+    margin-left: 5%;
+    text-align: center;
+    color: #000;
+    font-size: 16px;
+  }
+
+  .nav-pills a {
+    font-size: 18px;
+  }
+
+  .nav-pills {
+    margin-bottom: 5px;
+  }
+
+  .nav-pills li {
+    cursor: pointer;
+  }
+
+  .nav-pills li a {
+    color: #000;
+  }
+
+  .detail-link {
+    font-size: 16px;
+    padding: 5px 15px;
+  }
+
+  .article .article-title {
+    font-size: 30px;
+  }
+
+  .article .article-content {
+    font-size: 20px;
+  }
+
+  .article .article-img div {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .article .second-title {
+    font-size: 24px;
+    padding: 10px 0;
+  }
+
+  .text-block {
+    font-size: 16px;
+    background-color: transparent;
+    border-radius: 0px;
+    padding: 10px 20px;
+    margin: 5px 0px;
+  }
+
+  .activity-item .title,
+  .production-item .title {
+    color: rgb(102, 102, 102);
+    font-size: 22px;
+    font-weight: 600;
+  }
+
+  .activity-item div,
+  .production-item p {
+    font-size: 20px;
+    line-height: 48px;
+  }
+
+  hr {
+    width: 100%;
+    margin: 10px 0;
+  }
+
+  .news-item .title {
+    font-size: 24px;
+    font-weight: 600;
+    text-align: center;
+  }
+  .news-item .news-img {
+    text-align: center;
+  }
+  .news-item .news-img img {
+    display: inline-block;
+  }
+  .news-item .news-brief {
+    font-size: 18px;
+    margin-top: 20px;
+  }
+  .production-item .production-img {
+    text-align: center;
+  }
+
+  .production-item .production-img img {
+    display: inline-block;
+  }
+
+  .production-item .production-info {
+    font-size: 18px;
+    line-height: 150%;
+  }
+
+  .production-item .production-content {
+    margin: 10px 0 0 10px
+  }
+  .membership-list .col-lg-6 {
+    font-size: 18px;
+    line-height: 150%;
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+  .membership-list .col-lg-6 p {
+    padding-left: 25%;
+  }
+  .membership-list .odd {
+    border-right: 1px solid #ccc;
+  }
+  .production-item .production-info .product-name {
+    font-size: 20px;
+    text-align: center;
+  }
+}
+
+.scroll-to-top {
+  background-color: rgba(102, 102, 102, 1);
+  width: 50px;
+  height: 50px;
+  position: fixed;
+  top: 90%;
+  right: 5%;
+  cursor: pointer;
+}
+
+.scroll-to-top img {
+  width: 50px;
+  height: 50px;
+}
+
+.news-item .title {
+  font-weight: 600;
+}
+.news-item .news-brief {
+  text-indent: 24px;
+}
+
+/* extra */
+.product-detail img {
+  display: inline-block;
+  margin: 0 auto;
+}
+.article-img img {
+  max-width: 500px;
+  max-height: 300px;
+}
+@media screen and (min-width: 1080px) {
+  .production-img, .news-img {
+    height: 250px;
+  }
+  .news-info, .production-info {
+    height: 700px;
+  }
+  .production-img  {
+    height: 350px;
+  }
+  .production-img .img-responsive {
+    max-height: 350px;
+  }
+}

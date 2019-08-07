@@ -20,7 +20,7 @@ public class User implements Serializable {
     public static final String STATE_NORMAL = "正常";
     private static final long serialVersionUID = 8735132096673200831L;
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
     @Column(length = 50)
     private String account;
@@ -32,6 +32,8 @@ public class User implements Serializable {
     private String wechat;
     @Column(length = 50)
     private String mail;
+    @Column(length = 100)
+    private String img;
     @Column(length = 50)
     private Integer shId;
     @Column(length = 50)
@@ -133,6 +135,14 @@ public class User implements Serializable {
         this.state = state;
     }
 
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -142,6 +152,7 @@ public class User implements Serializable {
                 ", name='" + name + '\'' +
                 ", wechat='" + wechat + '\'' +
                 ", mail='" + mail + '\'' +
+                ", img='" + img + '\'' +
                 ", shId=" + shId +
                 ", qyId=" + qyId +
                 ", state='" + state + '\'' +

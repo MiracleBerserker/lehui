@@ -1,8 +1,11 @@
 package miracle.cherry.lehui.common.dao;
 
+import miracle.cherry.lehui.common.entity.Unit;
 import miracle.cherry.lehui.common.entity.User;
 import miracle.cherry.lehui.common.entity.UserUnitRel;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
 
 /**
  * @Description:
@@ -21,4 +24,11 @@ public interface UserUnitRelDao  extends JpaRepository<UserUnitRel, Integer> {
      * @return
      */
      UserUnitRel findByUnitIdAndUserId(Integer unId,Integer usID);
+
+
+    List<UserUnitRel> findAllByUnitId(Integer id);
+
+    void deleteByUnitIdAndUserId(Integer unitId,Integer userId);
+
+    UserUnitRel findByUnitId(Integer unitID);
 }

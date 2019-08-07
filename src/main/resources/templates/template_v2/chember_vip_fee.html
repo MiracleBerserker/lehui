@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css2/chember_vip_fee.css">
+    <!-- HTML5 Shiv 和 Respond.js 用于让 IE8 支持 HTML5元素和媒体查询 -->
+    <!--[if lt IE 9]>
+         <script src="/js/html5shiv.js"></script>
+         <script src="/js/respond.min.js"></script>
+      <![endif]-->
+    <title>会员收费</title>
+</head>
+
+<body>
+    <!-- 头部 -->
+    <div class="header">
+        <img src="/img/icon/left.png" alt="#" onClick="javascript :history.back(-1);">
+        <div class="assocTitle">会员收费</div>
+    </div>
+    <div class="content">
+        <div class="container">
+            <!-- 顶部的职位和金额 -->
+            <div class="fee_title row">
+                <div class="col-xs-3 col-xs-offset-1">职位</div>
+                <div class="col-xs-3 col-xs-offset-5">金额</div>
+            </div>
+            <!-- 主要内容列表 -->
+            <div class="form_group">
+                <div class="form_item row form_active" th:each="vip:${vips}">
+                    <div class="col-xs-3 col-xs-offset-1" th:text="${vip.title}">会长</div>
+                    <div class="col-xs-2 col-xs-offset-3 fee_total">
+                        <input class="form_input form_input_active" type="text" th:value="${vip.price}">
+                    </div>
+                    <div class="col-xs-2 year">元/年</div>
+                </div>
+                <!-- 查看缴费情况 -->
+            <!--<div class="payment">缴费</div>-->
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="/js/jquery.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>

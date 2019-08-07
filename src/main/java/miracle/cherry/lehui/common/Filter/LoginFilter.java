@@ -34,7 +34,7 @@ public class LoginFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         System.out.println(request.getRequestURI());
-       if(!request.getRequestURI().startsWith("/system/")||request.getRequestURI().startsWith("/system/account/login")){
+       if(!request.getRequestURI().startsWith("/system/")){
            filterChain.doFilter(servletRequest,servletResponse);
        }else {
            if(request.getSession().getAttribute("user") != null){
