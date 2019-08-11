@@ -116,4 +116,13 @@ public class PrivilegeService {
         return roles;
     }
 
+    /**
+     * 增加角色
+     * @return
+     */
+    public Role addRole(Role role){
+
+
+        return role;
+    }
 }

@@ -3,6 +3,8 @@ package miracle.cherry.lehui.common.dao;
 import miracle.cherry.lehui.common.entity.Privilege;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 /**
  * @Description:
  * @Copyright: Dist
@@ -12,6 +14,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @Description:
  */
 public interface PrivilegeDao extends JpaRepository<Privilege, Integer> {
+
 
 
 }
