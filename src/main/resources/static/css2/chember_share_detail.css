@@ -33,13 +33,19 @@
 .share-item .userImg {
   text-align: center;
 }
-.share-item .userImg .img {
+.share-item .userImg div {
   display: inline-block;
   width: 60px;
   height: 60px;
   border-radius: 50px;
-  background: url('/img/icon/user-portrait.png') center center;
 }
+
+.share-item .userImg img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50px;
+}
+
 .share-item .user-name {
   margin: 5px;
   text-align: center;

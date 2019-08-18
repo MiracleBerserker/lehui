@@ -24,7 +24,7 @@
 <div class="container">
     <header>
         <p><a href="" th:text="${unit.name}" th:href="@{'/index/'+${unit.id}}"></a></p>
-        <span class="manage">管理</span>
+        <a th:href="@{'/account/jumpManager'}"><span class="manage" >管理</span></a>
         <span class="contract-telephone pc-show">联系电话：<span th:text="${unit.tel}"></span></span>
     </header>
 </div>

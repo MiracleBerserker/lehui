@@ -18,11 +18,71 @@ import org.springframework.stereotype.Component;
 public class MyConfig {
     private String imgPath;
 
+    private String url;
+
+    private String manageUrl;
+    //登录地址
+    private String loginUrl;
+    //我的地址
+    private String myPageUrl;
+
+    private String projectUrl;
+
+    private String defaultImg;
+
     public String getImgPath() {
         return imgPath;
     }
 
     public void setImgPath(String imgPath) {
         this.imgPath = imgPath;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getManageUrl() {
+        return manageUrl;
+    }
+
+    public void setManageUrl(String manageUrl) {
+        this.manageUrl = manageUrl;
+    }
+
+    public String getLoginUrl() {
+        return loginUrl;
+    }
+
+    public void setLoginUrl(String loginUrl) {
+        this.loginUrl = loginUrl;
+    }
+
+    public String getMyPageUrl() {
+        return myPageUrl;
+    }
+
+    public void setMyPageUrl(String myPageUrl) {
+        this.myPageUrl = myPageUrl;
+    }
+
+    public String getProjectUrl() {
+        return projectUrl;
+    }
+
+    public void setProjectUrl(String projectUrl) {
+        this.projectUrl = projectUrl;
+    }
+
+    public String getDefaultImg() {
+        return defaultImg;
+    }
+
+    public void setDefaultImg(String defaultImg) {
+        this.defaultImg = defaultImg;
     }
 }

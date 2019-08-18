@@ -16,4 +16,6 @@ import java.util.List;
  */
 public interface RoleUserDao extends JpaRepository<RoleUser, Integer> {
     List<RoleUser> findAllByUId(Integer uid);
+    RoleUser findByUIdAndUnitId(Integer userId,Integer unitId);
+    RoleUser findByRIdAndAndUId(Integer roleId,Integer userId);
 }

@@ -10,6 +10,7 @@ import miracle.cherry.lehui.common.entity.Unit;
 import miracle.cherry.lehui.common.entity.User;
 import miracle.cherry.lehui.common.service.UnitService;
 import miracle.cherry.lehui.common.service.UserService;
+import miracle.cherry.lehui.common.tools.QRCodeUtil;
 import miracle.cherry.lehui.common.tools.Result;
 import miracle.cherry.lehui.moban.entity.Activity;
 import miracle.cherry.lehui.moban.entity.HelpDetail;
@@ -17,12 +18,15 @@ import miracle.cherry.lehui.moban.entity.Info;
 import miracle.cherry.lehui.moban.entity.LunBoTu;
 import miracle.cherry.lehui.moban.service.MenuService;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.*;
 
 /**
@@ -33,6 +37,7 @@ import java.util.*;
  * @Modified:
  * @Description:
  */
+@Transactional//事务管理
 @Api(description = "用户管理-及登录注册部分接口")
 @RestController
 @RequestMapping(value = CommonUrl.ACCOUNT)
@@ -47,6 +52,8 @@ public class AccountController {
     @Resource
     MenuService menuService;
 
+    @Resource
+    MyConfig myConfig;
 
     @ResponseBody
     @ApiOperation(value="用户登录接口",response = Result.class)
@@ -112,7 +119,7 @@ public class AccountController {
             Integer unitId,
             HttpServletRequest request
     ) throws Exception {
-        userService.saveUURel(unitId,((User)request.getSession().getAttribute("user")).getId(),"申请中");
+        userService.saveUURel(unitId,((User)request.getSession().getAttribute("user")).getId(),"审核中");
         return new Result(Result.SUCCESS,Collections.singletonMap("unitId",unitId),"申请成功").toJson();
     }
 
@@ -167,7 +174,7 @@ public class AccountController {
     @ApiOperation(value="获取乐汇系统的轮播图",response = Result.class)
     @RequestMapping(value = "/queryLunBoTu",method = RequestMethod.GET)
     public String queryLunBoTu() throws Exception {
-        List<LunBoTu> list = menuService.queryLunBoTu(80,"正常",0);
+        List<LunBoTu> list = menuService.queryLunBoTu(Unit.ADMIN_SHID,"正常",User.ADMIN_USER);
         return new Result(Result.SUCCESS, list,"拉取成功").toJson();
     }
 
@@ -181,4 +188,68 @@ public class AccountController {
         helpDetail = menuService.saveHelpDetail(helpDetail);
         return new Result(Result.SUCCESS, helpDetail,"上传成功").toJson();
     }
+
+
+    /**
+     * 跳转管理页面 根据用户是否登录进行跳转
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @ResponseBody
+    @ApiOperation(value="跳转管理地址----获取地址跳转",response = Result.class)
+    @RequestMapping(value = "/jumpManager",method = RequestMethod.GET)
+    public void jumpManager(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        //重定向的响应代码
+        response.setStatus(302);
+        //获取url
+        String url = myConfig.getManageUrl();
+        //判断是否登录
+        Object object = request.getSession().getAttribute("user");
+        if(!(object==null)){
+            //登录跳转到我的页面
+            url+=myConfig.getMyPageUrl();
+        }else {
+            //没有登录就跳转到登录页面
+            url+=myConfig.getLoginUrl();
+        }
+        response.sendRedirect(url);
+    }
+
+
+    @ResponseBody
+    @ApiOperation(value="将文字转换为二维码",response = Result.class)
+    @RequestMapping(value = "/createQRcode",method = RequestMethod.GET)
+    public void createQRcode(HttpServletRequest request,
+                             HttpServletResponse response,
+                             @ApiParam(value = "文本内容", required = true)
+                             @RequestParam String text,
+                             @ApiParam(value = "是否将当前登录用户的头像添加到二维码中  true  or  false", required = true)
+                             @RequestParam Boolean isAddImg
+                             ) throws Exception {
+        //获取resonse文件响应流
+        OutputStream outputStream = response.getOutputStream();
+        //判断是否讲用户头像添加到二维码中
+        if(isAddImg){
+            //获取当前用户 判断是否为空
+            User user = (User) request.getSession().getAttribute("user");
+            if(user==null){
+                QRCodeUtil.encode(text,outputStream);
+            }else {
+                String img = myConfig.getProjectUrl();
+                if(user.getImg()==null||"".equals(user.getImg())){
+                    img+=myConfig.getDefaultImg();
+                }else {
+                    img+=user.getImg();
+                }
+                QRCodeUtil.encode(text,img,outputStream,true);
+            }
+        }else {
+            QRCodeUtil.encode(text,outputStream);
+        }
+        outputStream.flush();
+        outputStream.close();
+    }
+
+
 }

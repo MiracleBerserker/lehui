@@ -8,6 +8,7 @@ import miracle.cherry.lehui.common.entity.User;
 import miracle.cherry.lehui.moban.entity.*;
 import miracle.cherry.lehui.moban.service.MenuService;
 import miracle.cherry.lehui.common.tools.Result;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -23,6 +24,7 @@ import java.util.List;
  * @Modified:
  * @Description:
  */
+@Transactional//事务管理
 @Api(description = "菜单功能-普通功能模块")
 @RestController
 @RequestMapping(value = CommonUrl.MENU)

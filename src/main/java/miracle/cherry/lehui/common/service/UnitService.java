@@ -1,5 +1,6 @@
 package miracle.cherry.lehui.common.service;
 
+import miracle.cherry.lehui.common.config.MyConfig;
 import miracle.cherry.lehui.common.dao.*;
 import miracle.cherry.lehui.common.entity.*;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,8 @@ public class UnitService {
     UserDao userDao;
     @Resource
     RoleDao roleDao;
+    @Resource
+    MyConfig myConfig;
     public List<Unit> finaAll(){
         return unitDao.findAll();
     }
@@ -56,19 +59,23 @@ public class UnitService {
             throw new Exception("该企业已经成功通过审核 不允许重复审核");
         }
         unit.setState("正常");
-        unit.setUrl("http://47.107.241.29:8756/index/"+unit.getId());
+        unit.setUrl(myConfig.getUrl()+unit.getId());
         //设置创建人机构和删除中间表
         UserUnitRel userUnitRel = userUnitRelDao.findByUnitId(unitId);
         User user = userDao.getOne(userUnitRel.getUserId());
+        RoleUser roleUserBack = roleUserDao.findByUIdAndUnitId(user.getId(),unitId);
+        if(roleUserBack!=null){
+            roleUserDao.delete(roleUserBack);
+        }
         RoleUser roleUser = new RoleUser();
-
+        roleUser.setUnitId(unitId);
         if(unit.getType().equals("企业")){
             user.setQyId(unitId);
-            roleUser.setrId(1);
+            roleUser.setrId(Role.QY_ROLE);
             unit.setTemplate("template_v1");
         }else {
             user.setShId(unitId);
-            roleUser.setrId(2);
+            roleUser.setrId(Role.SH_ROLE);
             unit.setTemplate("template_v2");
         }
 

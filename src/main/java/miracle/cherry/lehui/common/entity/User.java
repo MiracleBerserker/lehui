@@ -15,9 +15,10 @@ import java.io.Serializable;
 @Table(name = "USER")
 public class User implements Serializable {
 
-
+    public static final  Integer ADMIN_USER=1;
     public static final String STATE_PROHIBIT = "禁止";
     public static final String STATE_NORMAL = "正常";
+    public static final String STATE_RELOGIN = "重新登录";
     private static final long serialVersionUID = 8735132096673200831L;
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)

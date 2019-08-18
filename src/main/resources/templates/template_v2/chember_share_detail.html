@@ -17,14 +17,14 @@
 <body>
 
     <div class="header">
-       <img src="/img/icon/left.png" alt="#" onClick="javascript :history.back(-1);">
+       <img src="/img/icon/left.png" alt="#" onClick="javascript :history.back(-1);return false;">
         <div class="assocTitle">分享贴</div>
     </div>
 
     <div class="container">
       <div class="row share-item" th:each="share:${shares}">
         <div class="col-xs-3">
-          <div class="userImg"><div class="img" th:src="${share.createImg}"></div></div>
+          <div class="userImg"><div class="img" ><img th:src="${share.createImg}" /></div></div>
           <div class="user-name" th:text="${share.createName}">李华</div>
         </div>
         <div class="col-xs-9">

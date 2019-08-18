@@ -3,10 +3,7 @@ package miracle.cherry.lehui.common.service;
 import io.swagger.models.auth.In;
 import miracle.cherry.lehui.common.config.MyConfig;
 import miracle.cherry.lehui.common.dao.*;
-import miracle.cherry.lehui.common.entity.RoleUser;
-import miracle.cherry.lehui.common.entity.Unit;
-import miracle.cherry.lehui.common.entity.User;
-import miracle.cherry.lehui.common.entity.UserUnitRel;
+import miracle.cherry.lehui.common.entity.*;
 import miracle.cherry.lehui.common.tools.FileTools;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +13,7 @@ import sun.misc.BASE64Decoder;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -44,8 +42,6 @@ public class UserService {
     RoleUserDao roleUserDao;
 
 
-
-
     @Resource
     MyConfig myConfig;
 
@@ -55,6 +51,13 @@ public class UserService {
 
     public User checkUser(String account,String password) throws Exception {
         User user = userDao.findByAccountAndPassword(account,password);
+        if (user==null){
+            throw new Exception("账号密码不存在");
+        }
+        if (user.getState().equals(User.STATE_RELOGIN)){
+            user.setState(User.STATE_NORMAL);
+            userDao.save(user);
+        }
         if(!user.getState().equals(User.STATE_NORMAL)){
             throw new Exception("用户已经被禁止登录 请联系管理员");
         }
@@ -74,7 +77,7 @@ public class UserService {
         user.setQyId(null);
         //保存用户
         user.setState("正常");
-        user.setImg("/img/icon/default.jpg");
+        user.setImg(myConfig.getDefaultImg());
         userDao.save(user);
         //保存文件替换地址
         if(qyId != null){
@@ -90,17 +93,11 @@ public class UserService {
                 throw new Exception("找不到申请的商会");
             }
         }else if(user.getQy() != null){
-//            if(unitDao.findByCode(user.getQy().getCode()) !=null){
-//                throw new Exception("该企业已经注册不能重复注册");
-//            }
             Unit unit = saveUnit(user.getQy(),"企业","审核中");
             saveUURel(unit.getId(),user.getId(),"创建中");
             unit.setArrayFiles(null);
             user.setQy(unit);
         }else if(user.getSh() != null){
-//            if(unitDao.findByCode(user.getSh().getCode()) !=null){
-//                throw new Exception("该商会已经注册不能重复注册");
-//            }
             Unit unit = saveUnit(user.getSh(),"商会","审核中");
             saveUURel(unit.getId(),user.getId(),"创建中");
             unit.setArrayFiles(null);
@@ -111,6 +108,29 @@ public class UserService {
         //
         return user;
     }
+
+
+    public User saveUser(User user) throws Exception {
+        //检测账号是否已经存在
+        if(userDao.findByAccount(user.getAccount()) != null){
+            throw new Exception("用户已存在");
+        }
+        //保存用户
+        user.setState("正常");
+        user.setImg(myConfig.getDefaultImg());
+        user.setShId(Unit.ADMIN_SHID);
+        userDao.save(user);
+        RoleUser roleUser = roleUserDao.findByUIdAndUnitId(user.getId(),Unit.ADMIN_SHID);
+        if(roleUser == null){
+            roleUser = new RoleUser();
+        }
+        roleUser.setUnitId(Unit.ADMIN_SHID);
+        roleUser.setrId(Role.ADMIN_MANAGER_ROLE);
+        roleUserDao.save(roleUser);
+        return user;
+    }
+
+
 
     public UserUnitRel saveUURel(Integer unId, Integer usId,String state) throws Exception {
         if(userUnitRelDao.findByUnitIdAndUserId(unId,usId) != null){
@@ -156,17 +176,25 @@ public class UserService {
 
     public void accept(Integer id,Integer uid,String type){
         User user = userDao.getOne(uid);
+
+        //先查询是否已经有角色了 有的话就先干掉在分配
+        RoleUser roleUserBack = roleUserDao.findByUIdAndUnitId(uid,id);
+        if(roleUserBack!=null){
+            roleUserDao.delete(roleUserBack);
+        }
+
         //添加对应的角色
         RoleUser roleUser = new RoleUser();
         if(type.equals("企业")){
            user.setQyId(id);
-           roleUser.setrId(1);
+           roleUser.setrId(Role.QY_ROLE);
            roleUser.setuId(uid);
         }else {
             user.setShId(id);
-            roleUser.setrId(3);
+            roleUser.setrId(Role.SHHY_ROLE);
             roleUser.setuId(uid);
         }
+        roleUser.setUnitId(id);
         userDao.save(user);
         roleUserDao.save(roleUser);
         //删除申请表对应数据
@@ -203,6 +231,89 @@ public class UserService {
     public User getUserById(Integer id){
         User user = userDao.findById(id).get();
         return user;
+    }
+
+    /**
+     * 刷新当前用户信息
+     * @param user
+     * @return
+     */
+    public User updateUserInfo(User user){
+        //重置用户基础信息
+        user = userDao.findById(user.getId()).get();
+        //重置用户所属单位
+        if(user.getQyId()!=null){
+            user.setQy(unitDao.findById(user.getQyId()).get());
+        }else if(user.getShId()!=null){
+            user.setSh(unitDao.findById(user.getShId()).get());
+        }
+        return user;
+    }
+
+
+    public User updateUserState(String state,Integer userId){
+        if(!state.equals(User.STATE_NORMAL)&&!state.equals(User.STATE_RELOGIN)&&!state.equals(User.STATE_PROHIBIT)){
+            return null;
+        }else {
+            User user = userDao.findById(userId).get();
+            user.setState(state);
+            userDao.save(user);
+            return user;
+        }
+    }
+
+    public List<User> getAllUserByUnitId(Integer unitId){
+        Unit unit = unitDao.findById(unitId).get();
+        List<User> users = null;
+        if (unit.getType().equals("企业")){
+            users = userDao.findAllByQyId(unitId);
+        }else {
+            users = userDao.findAllByShId(unitId);
+        }
+        return users;
+    }
+
+    public List<User> getAllUser(){
+        List<User> users = userDao.findAll();
+        return users;
+    }
+
+    /**
+     * 将用户移除当前组织
+     * @param userId
+     * @param unitId
+     * @return
+     */
+    public User removeUser(Integer userId,Integer unitId){
+        User user = userDao.findById(userId).get();
+        RoleUser roleUser = roleUserDao.findByUIdAndUnitId(userId,unitId);
+        if(user==null||roleUser==null){
+            return null;
+        }
+        if(user.getQyId()!=null&&Integer.valueOf(user.getQyId())==Integer.valueOf(unitId)){
+            user.setQyId(null);
+        }else if(user.getShId()!=null&&Integer.valueOf(user.getShId())==Integer.valueOf(unitId)){
+            user.setShId(null);
+        }
+        roleUserDao.delete(roleUser);
+        userDao.save(user);
+        updateUserState(User.STATE_RELOGIN,userId);
+        return user;
+    }
+
+    public List<User> findByConditions(Integer unitId,String condition){
+        List<User> users = null;
+        if(unitId==null && !condition.equals("")){
+            users = userDao.findByConditions(condition);
+        }else {
+            Unit unit = unitDao.findById(unitId).get();
+            if(unit.getType().equals("企业")){
+                users = userDao.findByConditionsAndQy(unitId,condition);
+            }else {
+                users = userDao.findByConditionsAndSh(unitId,condition);
+            }
+        }
+       return users;
     }
 
 }

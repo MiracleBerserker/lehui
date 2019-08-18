@@ -9,6 +9,7 @@ import miracle.cherry.lehui.common.service.DictsService;
 import miracle.cherry.lehui.common.service.UnitService;
 import miracle.cherry.lehui.common.service.UserService;
 import miracle.cherry.lehui.common.tools.Result;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -24,6 +25,7 @@ import java.util.List;
  * @Modified:
  * @Description:
  */
+@Transactional//事务管理
 @RestController
 @Api(tags = "数据字典-无登录就可以调用  配有增删改查  可以自己做页面进行增删改查管理")
 @RequestMapping(value = CommonUrl.DICTS)

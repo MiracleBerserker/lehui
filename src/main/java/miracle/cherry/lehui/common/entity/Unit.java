@@ -16,6 +16,9 @@ import java.util.List;
 @Table(name = "UNIT")
 public class Unit implements Serializable {
 
+
+    public static Integer ADMIN_SHID=80;
+
     private static final long serialVersionUID = 8735132088673200831L;
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)

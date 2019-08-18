@@ -1,6 +1,7 @@
 package miracle.cherry.lehui.common.Filter;
 
 
+import miracle.cherry.lehui.common.entity.User;
 import miracle.cherry.lehui.common.service.UserService;
 import miracle.cherry.lehui.common.tools.Result;
 
@@ -37,8 +38,18 @@ public class LoginFilter implements Filter {
        if(!request.getRequestURI().startsWith("/system/")){
            filterChain.doFilter(servletRequest,servletResponse);
        }else {
-           if(request.getSession().getAttribute("user") != null){
-               filterChain.doFilter(servletRequest,servletResponse);
+           User user = (User) request.getSession().getAttribute("user");
+           if( user!= null){
+               //判断该检查该用户状态是否正常
+               User nowUser = userService.getUserById(user.getId());
+               if(!nowUser.getState().equals(User.STATE_NORMAL)){
+                   PrintWriter printWriter = response.getWriter();
+                   printWriter.write(new Result(Result.FAIL,null,"用户状态发生变化需要重新登录").toJson());
+                   printWriter.flush();
+                   printWriter.close();
+               }else {
+                   filterChain.doFilter(servletRequest,servletResponse);
+               }
            }else {
                PrintWriter printWriter = response.getWriter();
                printWriter.write(new Result(Result.FAIL,null,"nologin").toJson());

@@ -2,8 +2,10 @@ package miracle.cherry.lehui.common.service;
 
 import miracle.cherry.lehui.common.dao.*;
 import miracle.cherry.lehui.common.entity.*;
+import miracle.cherry.lehui.moban.dao.MailDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -36,6 +38,14 @@ public class PrivilegeService {
     RolePrivilegeDao rolePrivilegeDao;
     @Resource
     RoleDao roleDao;
+    @Resource
+    MailDao mailDao;
+    @Resource
+    SourceMaterialDao sourceMaterialDao;
+    @Resource
+    SystemHelpDao systemHelpDao;
+
+
     /**
      * 保存权限
      * @param privilege
@@ -121,8 +131,119 @@ public class PrivilegeService {
      * @return
      */
     public Role addRole(Role role){
-
-
         return role;
     }
+
+    public Integer getMailNum(Integer userId){
+        Integer num = mailDao.findAllByUserId(userId).size();
+        return num;
+    }
+
+    /**
+     * 保存素材模版
+     * @param sourceMaterial
+     * @return
+     */
+    public SourceMaterial saveSourceMaterial(SourceMaterial sourceMaterial){
+        if("".equals(sourceMaterial.getType())||"".equals(sourceMaterial.getModel())){
+            return null;
+        }
+        sourceMaterialDao.save(sourceMaterial);
+        return sourceMaterial;
+    }
+
+    /**
+     * 根据id删除素材模版
+     * @param id
+     * @return
+     */
+    public SourceMaterial deleteSourceMaterial(Integer id){
+        if(id!=null){
+            SourceMaterial sourceMaterial = sourceMaterialDao.findById(id).get();
+            if (sourceMaterial!=null){
+                sourceMaterialDao.delete(sourceMaterial);
+                return sourceMaterial;
+            }else {
+                return null;
+            }
+        }else {
+            return null;
+        }
+    }
+
+    /**
+     * 返回全部
+     * @return
+     */
+    public List<SourceMaterial> getAllSource(){
+        return sourceMaterialDao.findAll();
+    }
+
+    /**
+     * 返回指定类型
+     * @param type
+     * @param model
+     * @return
+     */
+    public Map<String,List<SourceMaterial>> getAllSourceByTypeAndModel(String type,String model){
+        if ("".equals(model)){
+            return null;
+        }
+        List<SourceMaterial> materials = null;
+        if (type==null||"".equals(type)){
+            materials = sourceMaterialDao.findAllByModel(model);
+        }else {
+            materials = sourceMaterialDao.findAllByTypeAndModel(type,model);
+        }
+        //进行简单的分组
+        Map<String,List<SourceMaterial>> map = new HashMap<>();
+        for(SourceMaterial sourceMaterial : materials){
+            if(map.get(sourceMaterial.getType())!=null){
+                map.get(sourceMaterial.getType()).add(sourceMaterial);
+            }else {
+                map.put(sourceMaterial.getType(),new ArrayList<>());
+                map.get(sourceMaterial.getType()).add(sourceMaterial);
+            }
+        }
+
+        return map;
+    }
+
+    /**
+     * 保存系统帮助
+     * @param systemHelp
+     * @return
+     */
+    public SystemHelp saveSystemHelp(SystemHelp systemHelp){
+        systemHelpDao.save(systemHelp);
+        return systemHelp;
+    }
+
+    /**
+     * 根据id删除系统帮助
+     * @param id
+     * @return
+     */
+    public SystemHelp deleteSystemHelp(Integer id){
+        SystemHelp systemHelp = systemHelpDao.findById(id).get();
+        if (systemHelp!=null){
+            systemHelpDao.delete(systemHelp);
+        }
+        return systemHelp;
+    }
+
+    public List<SystemHelp> getAllSystemHelp(String type,String problem){
+        List<SystemHelp> systemHelps = null;
+        if((type==null||"".equals(type))&&(problem==null||"".equals(problem))){
+            systemHelps = systemHelpDao.findAll();
+        }else if(type==null||"".equals(type)){
+            systemHelps = systemHelpDao.findAllByProblem(problem);
+        }else {
+            systemHelps = systemHelpDao.findAllByTypeAndProblem(type,problem);
+        }
+
+        return systemHelps;
+    }
+
+
 }

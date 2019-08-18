@@ -22,6 +22,8 @@ public class RoleUser implements Serializable {
     private Integer uId;
     @Column(length = 50)
     private Integer rId;
+    @Column(length = 50)
+    private Integer unitId;
 
     public Integer getId() {
         return id;
@@ -45,5 +47,13 @@ public class RoleUser implements Serializable {
 
     public void setrId(Integer rId) {
         this.rId = rId;
+    }
+
+    public Integer getUnitId() {
+        return unitId;
+    }
+
+    public void setUnitId(Integer unitId) {
+        this.unitId = unitId;
     }
 }

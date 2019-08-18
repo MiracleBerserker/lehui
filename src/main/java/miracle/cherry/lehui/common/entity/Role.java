@@ -15,6 +15,12 @@ import java.io.Serializable;
 @Table(name = "ROLE")
 public class Role implements Serializable {
     private static final long serialVersionUID = 873516398673200831L;
+
+    public static Integer QY_ROLE = 1;
+    public static Integer SH_ROLE = 2;
+    public static Integer SHHY_ROLE = 3;
+    public static Integer ADMIN_ROLE = 4;
+    public static Integer ADMIN_MANAGER_ROLE = 5;
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;

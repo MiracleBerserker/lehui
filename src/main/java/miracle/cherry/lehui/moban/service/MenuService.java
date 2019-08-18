@@ -522,6 +522,9 @@ public class MenuService {
      * @return
      */
     public HelpDetail saveHelpDetail(HelpDetail helpDetail){
+        if(helpDetail.getHelpId()==null){
+            return null;
+        }
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String createTime = simpleDateFormat.format(new Date());
         helpDetail.setCreateTime(createTime);
@@ -640,6 +643,9 @@ public class MenuService {
         if(unitId==null){
             throw new Exception("无法识别的机构无法进行正常上传新闻");
         }else {
+            if(Integer.valueOf(unitId)==Integer.valueOf(Unit.ADMIN_SHID)){
+                return status;
+            }
             Unit unit =  unitDao.findById(unitId).get();
             if (unit.getType().equals("商会")){
                 status = "审核中";

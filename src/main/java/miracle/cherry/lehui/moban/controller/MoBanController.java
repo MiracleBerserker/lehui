@@ -7,6 +7,7 @@ import miracle.cherry.lehui.common.service.UnitService;
 import miracle.cherry.lehui.moban.dao.*;
 import miracle.cherry.lehui.moban.entity.*;
 import org.mapstruct.Mapping;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -22,6 +23,7 @@ import java.util.List;
  * @Modified:
  * @Description:
  */
+@Transactional//事务管理
 @RestController
 @RequestMapping(value = CommonUrl.TEMPLATE)
 public class MoBanController {

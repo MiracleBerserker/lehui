@@ -36,7 +36,7 @@
   </div>
 
   <div class="header pc-hidden">
-    <img class="return" src="/img/icon/left.png" alt="#" onClick="javascript :history.back(-1);">
+    <img class="return" src="/img/icon/left.png" alt="#" onClick="javascript :history.back(-1);return false;">
     <div class="assocTitle">新闻</div>
   </div>
 
@@ -69,22 +69,6 @@
   <!-- 包括所有已编译的插件 -->
   <script src="/js/bootstrap.min.js"></script>
   <script>
-    $('.return').bind('click', function () {
-      window.location = './chember_index.html';
-    });
-
-    //页面滚动到顶部
-    // $('.scroll-to-top').bind('click', function () {
-    //   window.scrollTo({
-    //     left: 0,
-    //     top: 0,
-    //     behavior: 'smooth'
-    //   })
-    // });
-
-    // $('.news-item').bind('click', function () {
-    //   window.location = './chember_news_detail.html';
-    // });
   </script>
 </body>
 
