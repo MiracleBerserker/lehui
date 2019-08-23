@@ -8,7 +8,7 @@
   color: #fff;
 }
 
-.header> img {
+.header>img {
   width: 28px;
   height: 22px;
   position: absolute;
@@ -229,6 +229,8 @@ input {
   }
 
   .nav-pills li {
+    width: 150px;
+    text-align: center;
     cursor: pointer;
   }
 

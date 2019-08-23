@@ -16,7 +16,6 @@
     <![endif]-->
     <link rel="stylesheet" href="/css2/chember-index-style.css">
     <style>
-
     </style>
 </head>
 
@@ -32,13 +31,14 @@
 <div class="container">
     <ul class="nav nav-pills">
         <li><a href="#introduction">简介</a></li>
-        <li><a href="#news">新闻</a></li>
-        <li><a href="#activity">活动</a></li>
-        <li><a href="#production">发现</a></li>
-        <li><a href="#membership">会员单位</a></li>
-        <li><a th:href="@{'/index/'+${unit.id}+'/helps'}">帮助</a></li>
-        <li><a th:href="@{'/index/'+${unit.id}+'/shares'}">分享</a></li>
-        <li><a th:href="@{'/index/'+${unit.id}+'/vips'}">会员收费</a></li>
+        <li><a th:href="@{'/index/'+${unit.id}+'/news'}">新闻</a></li>
+        <li><a th:href="@{'/index/'+${unit.id}+'/activities'}">活动</a></li>
+        <li><a th:href="@{'/index/'+${unit.id}+'/discovers'}">发现</a></li>
+        <li><a th:href="@{'/index/'+${unit.id}+'/units'}">会员单位</a></li>
+        <li><a th:href="@{'/index/'+${unit.id}+'/helps'}"  class="pc-hidden">帮助</a></li>
+        <li><a th:href="@{'/index/'+${unit.id}+'/shares'}" class="pc-hidden">分享</a></li>
+        <li><a th:href="@{'/index/'+${unit.id}+'/vips'}"  class="pc-hidden">会员收费</a></li>
+        <li><a href="#vip-fee" class="mobile-hidden">会员收费</a></li>
         <li><a href="#contract">联系方式</a></li>
     </ul>
 </div>
@@ -63,10 +63,10 @@
         <a name="introduction"><span>简介</span></a>
     </div>
     <div class="row link-copy">
-        <span class="link-text">企业域名:<span th:text="${unit.url}"></span></span>
+        <span class="link-text">商协会域名:<span th:text="${unit.url}"></span></span>
         <div class="link-btn-group">
             <span id="urlcopy" class="block-button">复制</span>
-            <!--<span class="block-button">分享</span>-->
+            <!--<span class="block-button" onclick="Filter();">生成二维码</span>-->
         </div>
     </div>
     <div class="row text-block" th:utext="${brief!=null ?brief.content:''}">
@@ -81,9 +81,6 @@
         <a name="news"><span>新闻</span></a>
         <a class="more" th:href="@{'/index/'+${unit.id}+'/news'}">更多</a>
     </div>
-    <hr>
-
-
     <!--<div class="pc-hidden">-->
         <!--<div class="row news-item" th:each="neww:${news}" th:if="${newwStat.index==0}"  th:onclick="|javascript:window.location ='/index/'+${unit.id}+'/news/'+${neww.id} |">-->
             <!--<div class="col-xs-10" >-->
@@ -96,7 +93,7 @@
         <!--<hr>-->
     <!--</div>-->
     <div class="pc-hidden">
-        <div class="row news-item" th:each="neww:${news}"  th:onclick="|javascript:window.location ='/index/'+${unit.id}+'/news/'+${neww.id} |">
+        <div class="row news-item" th:each="neww:${news}" th:if="${newwStat.index<6}"  th:onclick="|javascript:window.location ='/index/'+${unit.id}+'/news/'+${neww.id} |">
             <div class="col-xs-10">
                 <div class="row news-title" th:text="${neww.title}"></div>
                 <div class="row news-info"><span class="news-date"  th:text="${neww.createTime}"></span>
@@ -104,7 +101,6 @@
             </div>
             <div class="col-xs-2"><img class="link-right" src="/img/icon/right.png"   alt=""></div>
         </div>
-        <hr>
     </div>
 
     <div class="row pc-show">
@@ -115,10 +111,12 @@
         <div class="col-lg-6">
             <ul>
                 <li th:each="neww:${news}"
-                    th:if="${newwStat.index<7}"><a th:text="${neww.title}"  th:onclick="|javascript:window.location ='/index/'+${unit.id}+'/news/'+${neww.id} |"></a> <span th:text="${neww.createTime}"></span></li>
+                    th:if="${newwStat.index<6}"><a th:text="${neww.title}"  th:onclick="|javascript:window.location ='/index/'+${unit.id}+'/news/'+${neww.id} |"></a> <span th:text="${neww.createTime}"></span>
+                </li>
             </ul>
         </div>
     </div>
+    <hr class="pc-show"/>
 </div>
 
 <div class="container section">
@@ -127,7 +125,7 @@
         <a class="more" th:href="@{'/index/'+${unit.id}+'/activities'}">更多</a>
     </div>
     <div class="activity-list ">
-        <div class="row text-block activity-item" th:each="activitie:${activities}">
+        <div class="row text-block activity-item" th:each="activitie:${activities}" th:if="${activitieStat.index<3}">
             <div class="col-xs-5">
                 <img class="img-responsive" th:src="${activitie.img}"  alt="">
             </div>
@@ -138,6 +136,7 @@
                 <div>联系人&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span th:text="${activitie.fzr}"></span></div>
                 <div>联系电话 <span th:text="${activitie.tel}"></span></div>
             </div>
+            <hr/>
         </div>
     </div>
 </div>
@@ -171,7 +170,7 @@
         <a class="more" th:href="@{'/index/'+${unit.id}+'/units'}">更多</a>
     </div>
     <div class="membership-list">
-        <div class="row text-block col-lg-4" th:each="uni:${units}"  th:if="${uniStat.index<2}">
+        <div class="row text-block col-lg-4" th:each="uni:${units}"  th:if="${uniStat.index<3}">
             <p th:text="${uni.name}">重庆市仁富消防器材公司</p>
             <p >联系人员：<span th:text="${uni.contacts}"></span></p>
             <p >联系电话：<span th:text="${uni.tel}"></span></p>
@@ -190,6 +189,9 @@
         <div class="col-lg-6 contract-way">
             <a name="contract"><span class="small-btn">联系方式</span></a>
         </div>
+        <div class="col-lg-6 pc-show">
+            <a name="vip-fee"><span class="small-btn">会员收费</span></a>
+        </div>
     </div>
     <div class="row text-block">
         <div class="col-lg-6">
@@ -197,6 +199,9 @@
             <p><span>负责人电话：</span><span th:text="${contact!=null?contact.tel:''}">负责人电话：</span></p>
             <p><span>商协会电话：</span><span th:text="${contact!=null?contact.gsTel:''}">商协会电话：</span></p>
             <p><span>商协会地址：</span><span th:text="${contact!=null?contact.address:''}">商协会地址：</span></p>
+        </div>
+        <div class="col-lg-6 pc-show" th:each="vip:${vips}">
+            <p><span th:text="${vip.title}"></span><b th:text="${vip.price}"></b>元/年</p>
         </div>
     </div>
     <hr>
@@ -214,8 +219,8 @@
             <input type="hidden" name="unitId" th:value="${unit.id}" id="unitId">
         </div>
     </div>
-    <div class="submitinfo">
-        <div class="submit" style="cursor: pointer;" id="submit">提交</div>
+    <div class="submitinfo row">
+        <div class="submit col-lg-6"  style="cursor: pointer;" id="submit">提交</div>
     </div>
     <hr>
 </div>
@@ -250,13 +255,15 @@
 
 <div class="container copyright">
     <div class="row">
-        <span>版权所有|重庆乐汇有限公司|重庆市南岸区</span>
+        <span th:text="'版权所有|'+${unit.name}+'|'+${unit.region}"></span>
     </div>
     <div class="row">
-        <span>渝ICP备：01525985号-5</span>
+        <span>渝ICP备：01525985号</span>
     </div>
 </div>
-<div class="scroll-to-top pc-show" onclick="javascript:scrollTo(0,0);"><img src="/img/icon/up.png" alt=""></div>
+<div class="scroll-to-top pc-show" ><img src="/img/icon/up.png" alt=""></div>
+
+
 
 <!-- jQuery (Bootstrap 的 JavaScript 插件需要引入 jQuery) -->
 <script src="/js/jquery.min.js"></script>
@@ -296,8 +303,6 @@
          });
      }
      });
-
-
 
 </script>
 </html>

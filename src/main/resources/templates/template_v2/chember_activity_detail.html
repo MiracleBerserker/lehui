@@ -27,10 +27,16 @@
 
   <div class="container pc-show">
     <ul class="nav nav-pills">
+      <li><a th:href="@{'/index/'+${unit.id}+'#introduction'}">简介</a></li>
       <li><a th:href="@{'/index/'+${unit.id}+'/news'}">新闻</a></li>
       <li><a th:href="@{'/index/'+${unit.id}+'/activities'}">活动</a></li>
       <li><a th:href="@{'/index/'+${unit.id}+'/discovers'}">发现</a></li>
       <li><a th:href="@{'/index/'+${unit.id}+'/units'}">会员单位</a></li>
+      <li><a th:href="@{'/index/'+${unit.id}+'/helps'}"  class="pc-hidden">帮助</a></li>
+      <li><a th:href="@{'/index/'+${unit.id}+'/shares'}" class="pc-hidden">分享</a></li>
+      <li><a th:href="@{'/index/'+${unit.id}+'/vips'}"  class="pc-hidden">会员收费</a></li>
+      <li><a th:href="@{'/index/'+${unit.id}+'#vip-fee'}"  class="mobile-hidden">会员收费</a></li>
+      <li><a th:href="@{'/index/'+${unit.id}+'#contract'}" >联系方式</a></li>
     </ul>
   </div>
 

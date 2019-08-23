@@ -18,14 +18,11 @@ clipboard.on('error', function (e) {
   alert(e);
 });
 
-//页面滚动到顶部
-// $('.scroll-to-top').bind('click', function() {
-//   window.scrollTo({
-//       left: 0,
-//       top: 0,
-//       behavior: 'smooth'
-//   })
-// });
+
+var scrollTop = document.querySelector('.scroll-to-top');
+scrollTop.addEventListener('click', function () {
+    $(document).scrollTop(0);
+});
 
 // $('.news-item').bind('click', function() {
 //   window.location = './chember_news_detail.html';

@@ -6,6 +6,10 @@ p {
   margin-bottom: 5px;
 }
 
+b {
+  font-weight: 400;
+}
+
 header {
   padding-top: 10px;
   font-size: 24px;
@@ -76,7 +80,7 @@ header .manage {
 .block-button {
   display: inline-block;
   text-align: center;
-  width: 30px;
+  /* width: 30px; */
   height: 20px;
   background-color: rgb(130, 117, 232);
   line-height: 20px;
@@ -287,7 +291,7 @@ header .manage {
   }
   .product-img {
     text-align: center;
-    height: 150px;
+    height: 100px;
   }
 }
 @media screen and (min-width: 1080px) {
@@ -439,9 +443,9 @@ header .manage {
     display: inline-block;
     width: 120px;
   }
-  .infoText {
+  /* .infoText {
     width: 50%;
-  }
+  } */
   .container > .submitinfo > .submit {
     width: 25%;
     margin: 0 auto;
@@ -489,6 +493,9 @@ header .manage {
     height: 300px;
     text-align: center;
   }
+  .news .pc-show li {
+    border-bottom: 1px solid #eee;
+  }
 }
 
 .scroll-to-top {
@@ -528,10 +535,35 @@ header .manage {
   .product-img .img-responsive {
     max-height: 300px;
   }
+  .nav-pills li{
+    width: 150px;
+    text-align: center;
+  }
 }
 
 @media screen and (max-width: 1080px) {
   .carousel-inner>.item>a>img, .carousel-inner>.item>img {
     height: 200px;
   }
+}
+
+.pc-show .submit {
+  width: 100px;
+  height: 30px;
+  background-color: #8275E8;
+  color: #fff;
+  text-align: center;
+  line-height: 30px;
+  border-radius: 10px;
+  margin: 0 auto;
+}
+.pc-show .infoText {
+  display: block;
+  margin: 0 auto;
+  margin-bottom: 10px;
+}
+
+.news-item {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 5px;
 }

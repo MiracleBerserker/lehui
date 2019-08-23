@@ -8,6 +8,7 @@ import miracle.cherry.lehui.moban.dao.*;
 import miracle.cherry.lehui.moban.entity.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
@@ -55,6 +56,8 @@ public class MenuService {
     VipDao vipDao;
     @Resource
     MailDao mailDao;
+    @Resource
+    VipUnitDao vipUnitDao;
 
     public List<New> queryNew(Integer unitId,String status,Integer userId){
         List<New> queryNew = new ArrayList<>();
@@ -665,7 +668,7 @@ public class MenuService {
     }
 
 
-    private void sendMail(String content,Integer userId){
+    public void sendMail(String content,Integer userId){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String createTime = simpleDateFormat.format(new Date());
        Mail mail = new Mail();
@@ -683,6 +686,49 @@ public class MenuService {
         }else {
             return false;
         }
+    }
+
+    /**
+     * 保存会员单位
+     */
+    public VipUnit saveVipUnit(VipUnit vipUnit){
+        if(vipUnit.getUnitId()==null){
+            return null;
+        }
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String createTime = simpleDateFormat.format(new Date());
+        vipUnit.setCreateTime(createTime);
+        vipUnitDao.save(vipUnit);
+        return vipUnit;
+    }
+
+    /**
+     * 删除会员单位
+     * @param id
+     * @return
+     */
+    public VipUnit deleteVipUnit(Integer id){
+       VipUnit vipUnit = vipUnitDao.findById(id).get();
+       if (vipUnit!=null){
+           vipUnitDao.delete(vipUnit);
+       }
+       return vipUnit;
+    }
+
+    /**
+     * 查询所有的会员单位
+     * @param unitId
+     * @return
+     */
+    public List<VipUnit> findAllVipUnitByUnitId(Integer unitId,String name){
+        List<VipUnit> vipUnits = null;
+        if(unitId!=null&&name!=null&&!"".equals(name)){
+            vipUnits = vipUnitDao.findAllByUnitIdAndName(unitId,name);
+        }else if(unitId!=null){
+            vipUnits = vipUnitDao.findAllByUnitId(unitId);
+        }
+
+        return vipUnits;
     }
 
 }

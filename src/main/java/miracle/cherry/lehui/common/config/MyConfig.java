@@ -29,6 +29,8 @@ public class MyConfig {
     private String projectUrl;
 
     private String defaultImg;
+    private String index;
+    private String http;
 
     public String getImgPath() {
         return imgPath;
@@ -84,5 +86,21 @@ public class MyConfig {
 
     public void setDefaultImg(String defaultImg) {
         this.defaultImg = defaultImg;
+    }
+
+    public String getIndex() {
+        return index;
+    }
+
+    public void setIndex(String index) {
+        this.index = index;
+    }
+
+    public String getHttp() {
+        return http;
+    }
+
+    public void setHttp(String http) {
+        this.http = http;
     }
 }

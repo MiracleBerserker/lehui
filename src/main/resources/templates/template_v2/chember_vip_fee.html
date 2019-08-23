@@ -32,7 +32,7 @@
             <!-- 主要内容列表 -->
             <div class="form_group">
                 <div class="form_item row form_active" th:each="vip:${vips}">
-                    <div class="col-xs-3 col-xs-offset-1" th:text="${vip.title}">会长</div>
+                    <div class="col-xs-3 col-xs-offset-1" th:text="${vip.title}"></div>
                     <div class="col-xs-2 col-xs-offset-3 fee_total">
                         <input class="form_input form_input_active" type="text" th:value="${vip.price}">
                     </div>

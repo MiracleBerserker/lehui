@@ -56,8 +56,6 @@ public class SwaggerConfig {
     }
 
 
-
-
     @Bean
     public Filter loginFilter() {
         return new LoginFilter();
@@ -72,7 +70,6 @@ public class SwaggerConfig {
         registration.setOrder(1);
         return registration;
     }
-
 
 
 }

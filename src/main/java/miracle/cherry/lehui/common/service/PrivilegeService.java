@@ -1,17 +1,17 @@
 package miracle.cherry.lehui.common.service;
 
+import miracle.cherry.lehui.common.config.MyConfig;
 import miracle.cherry.lehui.common.dao.*;
 import miracle.cherry.lehui.common.entity.*;
 import miracle.cherry.lehui.moban.dao.MailDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
+import sun.java2d.pipe.SpanShapeRenderer;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @Description:
@@ -44,7 +44,16 @@ public class PrivilegeService {
     SourceMaterialDao sourceMaterialDao;
     @Resource
     SystemHelpDao systemHelpDao;
-
+    @Resource
+    CostDao costDao;
+    @Resource
+    PaymentDao paymentDao;
+    @Resource
+    FlowBillsDao flowBillsDao;
+    @Resource
+    FeedbackDao feedbackDao;
+    @Resource
+    MyConfig myConfig;
 
     /**
      * 保存权限
@@ -245,5 +254,218 @@ public class PrivilegeService {
         return systemHelps;
     }
 
+
+    /**
+     * 保存花费项目
+     * @param cost
+     * @return
+     * @throws Exception
+     */
+    public Cost saveCost(Cost cost) throws Exception {
+        if(cost.getUnitType()==null||"".equals(cost.getUnitType())){
+            throw new Exception("unitType 不能为空 必须是企业  或者 商会");
+        }
+        if(cost.getType()==null||"".equals(cost.getType())){
+            throw new Exception("type 不能为空 必须写明是那种类型的付费项目");
+        }
+        cost.setStatus(Cost.STATUS_NORMAL);
+        String mu = cost.getMoney()+"";
+        if(cost.getMeasurement().equals(Cost.STATUS_COSTUNIT_DAY)){
+            mu+="元/"+cost.getNums()+"天";
+        }else if(cost.getMeasurement().equals(Cost.STATUS_COSTUNIT_MONTH)){
+            mu+="元/"+cost.getNums()+"月";
+        }else if(cost.getMeasurement().equals(Cost.STATUS_COSTUNIT_YEAR)){
+            mu+="元/"+cost.getNums()+"年";
+        }
+        cost.setMoneymea(mu);
+        costDao.save(cost);
+        return cost;
+    }
+
+    public Cost closeCost(Integer id){
+        Cost cost = costDao.findById(id).get();
+        cost.setStatus(Cost.STATUS_SHIXIAO);
+        costDao.save(cost);
+        return cost;
+    }
+
+    public Cost updateCost(Cost cost){
+        if(cost.getId()==null){
+            return null;
+        }
+        Cost cc = costDao.getOne(cost.getId());
+        if(cc==null){
+            return null;
+        }
+        costDao.save(cost);
+        return cost;
+    }
+
+    public Cost getCost(Integer id){
+        return costDao.findById(id).get();
+    }
+
+    public List<Cost> findAllCostByTypeAndUnitType(String type,String unitType,String status){
+        List<Cost> costs = null;
+        if(unitType==null||"".equals(unitType)){
+            costs = costDao.findAllByTypeAndStatus(type,status);
+        }else {
+            costs = costDao.findAllByTypeAndStatusAndUnitType(type,status,unitType);
+        }
+        return costs;
+    }
+
+
+    public Payment savePayment(Payment payment,User user) throws Exception {
+        Unit unit = unitDao.findById(payment.getUnitId()).get();
+        Cost cost = costDao.findById(payment.getCostId()).get();
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        if(cost==null||unit==null){
+            throw new Exception("支付出现故障无法正常支付");
+        }
+        //查询是否是重复购买支付
+        Payment pp = paymentDao.findByUnitIdAndCostId(payment.getUnitId(),payment.getCostId());
+        if(pp!=null){
+            calendar.setTime(simpleDateFormat.parse(pp.getEndTime()));
+            payment.setId(pp.getId());
+        }else {
+            payment.setStartTime(simpleDateFormat.format(new Date()));
+        }
+        if(cost.getMeasurement().equals(Cost.STATUS_COSTUNIT_YEAR)){
+            calendar.set(Calendar.YEAR,calendar.get(Calendar.YEAR)+cost.getNums());
+        }else if(cost.getMeasurement().equals(Cost.STATUS_COSTUNIT_MONTH)){
+            calendar.set(Calendar.MONTH,calendar.get(Calendar.MONTH)+cost.getNums());
+        }else if(cost.getMeasurement().equals(Cost.STATUS_COSTUNIT_DAY)){
+            calendar.set(Calendar.DAY_OF_MONTH,calendar.get(Calendar.DAY_OF_MONTH)+cost.getNums());
+        }else {
+            return null;
+        }
+        payment.setEndTime(simpleDateFormat.format(calendar.getTime()));
+        payment.setName(unit.getName());
+        payment.setImg(user.getImg());
+        payment.setWechat(user.getWechat());
+        payment.setTel(user.getAccount());
+        payment.setUnitTel(unit.getTel());
+        payment.setContent(cost.getName());
+        payment.setType(cost.getType());
+        paymentDao.save(payment);
+        //生成流水账单
+        FlowBills flowBills = new FlowBills();
+        flowBills.setCostId(payment.getCostId());
+        flowBills.setMoney(cost.getMoney());
+        flowBills.setUnitId(unit.getId());
+        flowBills.setName(cost.getName());
+        flowBills.setCreateTime(simpleDateFormat.format(new Date()));
+        flowBills.setPaymentId(payment.getId());
+        flowBills.setUserName(user.getName());
+        flowBills.setUnitName(unit.getName());
+        flowBills.setCostName(cost.getName());
+        flowBills.setUserId(user.getId());
+        flowBills.setOrderNumber(UUID.randomUUID().toString().replaceAll("-",""));
+        flowBillsDao.save(flowBills);
+        return payment;
+
+    }
+
+    public List<Payment> findPayment(Integer costId,Integer unitId){
+        List<Payment> payments = null;
+        if(costId!=null&&unitId!=null){
+            payments = paymentDao.findAllByCostIdAndUnitId(costId,unitId);
+        }else if(costId!=null){
+            payments = paymentDao.findAllByCostId(costId);
+        }else if(unitId!=null){
+            payments = paymentDao.findAllByUnitId(unitId);
+        }else {
+            payments = paymentDao.findAll();
+        }
+        return payments;
+    }
+
+    public List<Payment> findPayment(String type,String unitName){
+        List<Payment> payments = null;
+        if(type!=null&&unitName!=null){
+            payments = paymentDao.findAllByTypeAndName(type,unitName);
+        }else if(type!=null){
+            payments = paymentDao.findAllByType(type);
+        }
+        return payments;
+    }
+
+    public List<FlowBills> findAllFlowBills(Integer unitId,Integer costId){
+        List<FlowBills> list = null;
+        if(unitId!=null&&costId!=null){
+            list = flowBillsDao.findAllByUnitIdAndCostId(unitId,costId);
+        }else if(unitId!=null){
+            list = flowBillsDao.findAllByUnitId(unitId);
+        }else if(costId!=null){
+            list = flowBillsDao.findAllByCostId(costId);
+        }else {
+            list = flowBillsDao.findAll();
+        }
+        return list;
+    }
+
+    public List<FlowBills> findAllFlowBillsByUserId(Integer userId){
+        if(userId!=null){
+            return flowBillsDao.findAllByUserId(userId);
+        }else {
+            return null;
+        }
+    }
+
+    public List<FlowBills> findAllFlowBillsByPayId(Integer payId){
+        if(payId!=null){
+            return flowBillsDao.findAllByPaymentId(payId);
+        }else {
+            return null;
+        }
+    }
+
+
+    public String addSite(String site,Integer paymentId){
+        if(site==null||"".equals(site)){
+            return null;
+        }
+        //保存到payment
+        Payment payment = paymentDao.findById(paymentId).get();
+        payment.setUrl(myConfig.getHttp()+site.trim()+myConfig.getIndex());
+        paymentDao.save(payment);
+        //保存到unit
+        Unit unit = unitDao.findById(payment.getUnitId()).get();
+        unit.setUrl(myConfig.getHttp()+site.trim()+myConfig.getIndex());
+        unitDao.save(unit);
+        return site;
+    }
+
+    public Feedback addFeedback(Feedback feedback,User user){
+       if(feedback.getId()!=null){
+           return null;
+       }
+       Unit unit = unitDao.findById(feedback.getUnitId()).get();
+       if(unit==null){
+           return null;
+       }
+       SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+       feedback.setDate(simpleDateFormat.format(new Date()));
+       feedback.setUserName(user.getName());
+       feedback.setUnitId(unit.getId());
+       feedback.setUnitName(unit.getName());
+       feedback.setTel(unit.getTel());
+       feedbackDao.save(feedback);
+       return feedback;
+    }
+
+    public Feedback deleteFeedback(Integer id){
+        Feedback feedback = feedbackDao.findById(id).get();
+        if(feedback!=null){
+            feedbackDao.delete(feedback);
+        }
+        return feedback;
+    }
+
+    public List<Feedback> getAllFeedback(){
+        return feedbackDao.findAll();
+    }
 
 }

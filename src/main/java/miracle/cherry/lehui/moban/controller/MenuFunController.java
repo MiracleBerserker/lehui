@@ -40,7 +40,7 @@ public class MenuFunController {
      * @return
      */
     @ResponseBody
-    @ApiOperation(value="获取新闻列表带分页",response = Result.class)
+    @ApiOperation(value="获取：新闻列表带分页",response = Result.class)
     @RequestMapping(value = "/getNews",method = RequestMethod.GET)
     public String getNews( @ApiParam(value = "机构id",required = true)
                            @RequestParam
@@ -54,7 +54,7 @@ public class MenuFunController {
     }
 
     @ResponseBody
-    @ApiOperation(value="上传新闻",response = Result.class)
+    @ApiOperation(value="上传：新闻",response = Result.class)
     @RequestMapping(value = "/saveNews",method = RequestMethod.POST)
     public String saveNews(@ApiParam(value = "新闻列表",required = true)
                            @RequestBody(required = true) New news, HttpServletRequest request) throws Exception {
@@ -66,7 +66,7 @@ public class MenuFunController {
         return new Result(Result.SUCCESS, newss,"上传成功").toJson();
     }
     @ResponseBody
-    @ApiOperation(value="删除新闻",response = Result.class)
+    @ApiOperation(value="删除：新闻",response = Result.class)
     @RequestMapping(value = "/deleteNews",method = RequestMethod.GET)
     public String deleteNews(@ApiParam(value = "新闻id",required = true)
                            @RequestParam(required = true) Integer newId) throws Exception {
@@ -74,7 +74,7 @@ public class MenuFunController {
         return new Result(Result.SUCCESS, "删除成功","删除成功").toJson();
     }
     @ResponseBody
-    @ApiOperation(value="审核新闻",response = Result.class)
+    @ApiOperation(value="审核：新闻",response = Result.class)
     @RequestMapping(value = "/aggrenNews",method = RequestMethod.GET)
     public String aggrenNews(@ApiParam(value = "新闻id",required = true)
                                 @RequestParam(required = true) Integer newId,
@@ -87,7 +87,7 @@ public class MenuFunController {
     }
 
     @ResponseBody
-    @ApiOperation(value="上传简介",response = Result.class)
+    @ApiOperation(value="上传：简介",response = Result.class)
     @RequestMapping(value = "/saveBrief",method = RequestMethod.POST)
     public String saveBrief(@ApiParam(value = "简介内容",required = true)
                            @RequestBody(required = true) Brief brief, HttpServletRequest request) throws Exception {
@@ -99,7 +99,7 @@ public class MenuFunController {
     }
 
     @ResponseBody
-    @ApiOperation(value="发布活动",response = Result.class)
+    @ApiOperation(value="发布：活动",response = Result.class)
     @RequestMapping(value = "/saveActivity",method = RequestMethod.POST)
     public String saveActivity(@ApiParam(value = "活动内容",required = true)
                             @RequestBody(required = true) Activity activity,
@@ -113,7 +113,7 @@ public class MenuFunController {
 
 
     @ResponseBody
-    @ApiOperation(value="获取简介",response = Result.class)
+    @ApiOperation(value="获取：简介",response = Result.class)
     @RequestMapping(value = "/getBrief",method = RequestMethod.GET)
     public String getBrief(@ApiParam(value = "机构id",required = true)
                            @RequestParam(required = true) Integer unitId
@@ -124,7 +124,7 @@ public class MenuFunController {
     }
 
     @ResponseBody
-    @ApiOperation(value="获取活动列表",response = Result.class)
+    @ApiOperation(value="获取：活动列表",response = Result.class)
     @RequestMapping(value = "/queryActivity",method = RequestMethod.GET)
     public String queryActivity(@ApiParam(value = "机构id",required = true)
                            @RequestParam(required = true) Integer unitId,
@@ -137,7 +137,7 @@ public class MenuFunController {
     }
 
     @ResponseBody
-    @ApiOperation(value="获取活动详情",response = Result.class)
+    @ApiOperation(value="获取：活动详情",response = Result.class)
     @RequestMapping(value = "/getActivity",method = RequestMethod.GET)
     public String getActivity(@ApiParam(value = "活动id",required = true)
                              @RequestParam(required = true) Integer id
@@ -182,7 +182,7 @@ public class MenuFunController {
 
 
     @ResponseBody
-    @ApiOperation(value="删除信息",response = Result.class)
+    @ApiOperation(value="删除：信息",response = Result.class)
     @RequestMapping(value = "/deleteInfo",method = RequestMethod.GET)
     public String deleteInfo(@ApiParam(value = "信息id",required = true)
                                  @RequestParam(required = true) Integer id
@@ -204,7 +204,7 @@ public class MenuFunController {
 
 
     @ResponseBody
-    @ApiOperation(value="上传发现",response = Result.class)
+    @ApiOperation(value="上传：发现",response = Result.class)
     @RequestMapping(value = "/saveDiscover",method = RequestMethod.POST)
     public String saveDiscover(@ApiParam(value = "上传发现",required = true)
                                @RequestBody(required = true) Discover discover,
@@ -217,7 +217,7 @@ public class MenuFunController {
     }
 
     @ResponseBody
-    @ApiOperation(value="删除发现",response = Result.class)
+    @ApiOperation(value="删除：发现",response = Result.class)
     @RequestMapping(value = "/deleteDiscover",method = RequestMethod.GET)
     public String deleteDiscover(@ApiParam(value = "发现id",required = true)
                              @RequestParam(required = true) Integer id
@@ -228,7 +228,7 @@ public class MenuFunController {
 
 
     @ResponseBody
-    @ApiOperation(value="获取发现列表",response = Result.class)
+    @ApiOperation(value="获取：发现列表",response = Result.class)
     @RequestMapping(value = "/queryDiscover",method = RequestMethod.GET)
     public String queryDiscover(@ApiParam(value = "机构id",required = true)
                                 @RequestParam(required = true) Integer unitId,
@@ -242,7 +242,7 @@ public class MenuFunController {
     }
 
     @ResponseBody
-    @ApiOperation(value="审核发现",response = Result.class)
+    @ApiOperation(value="审核：发现",response = Result.class)
     @RequestMapping(value = "/aggrenDiscover",method = RequestMethod.GET)
     public String aggrenDiscover(@ApiParam(value = "发现id",required = true)
                                  @RequestParam(required = true) Integer newId,
@@ -258,7 +258,7 @@ public class MenuFunController {
 
 
     @ResponseBody
-    @ApiOperation(value="上传轮播图",response = Result.class)
+    @ApiOperation(value="上传：轮播图",response = Result.class)
     @RequestMapping(value = "/saveLunBoTu",method = RequestMethod.POST)
     public String saveLunBoTu(@ApiParam(value = "上传轮播图",required = true)
                                @RequestBody(required = true) LunBoTu lunBoTu,
@@ -271,7 +271,7 @@ public class MenuFunController {
     }
 
     @ResponseBody
-    @ApiOperation(value="获取轮播图列表",response = Result.class)
+    @ApiOperation(value="获取：轮播图列表",response = Result.class)
     @RequestMapping(value = "/queryLunBoTu",method = RequestMethod.GET)
     public String queryLunBoTu(@ApiParam(value = "机构id",required = true)
                                @RequestParam(required = true) Integer unitId,
@@ -285,7 +285,7 @@ public class MenuFunController {
     }
 
     @ResponseBody
-    @ApiOperation(value="审核轮播图",response = Result.class)
+    @ApiOperation(value="审核：轮播图",response = Result.class)
     @RequestMapping(value = "/aggrenLunBoTu",method = RequestMethod.GET)
     public String aggrenLunBoTu(@ApiParam(value = "轮播图id",required = true)
                                  @RequestParam(required = true) Integer newId,
@@ -299,7 +299,7 @@ public class MenuFunController {
 
 
     @ResponseBody
-    @ApiOperation(value="删除轮播图",response = Result.class)
+    @ApiOperation(value="删除：轮播图",response = Result.class)
     @RequestMapping(value = "/deleteLunBoTu",method = RequestMethod.GET)
     public String deleteLunBoTu(@ApiParam(value = "轮播图id",required = true)
                                  @RequestParam(required = true) Integer id
@@ -309,7 +309,7 @@ public class MenuFunController {
     }
 
     @ResponseBody
-    @ApiOperation(value="修改或者保存联系方式",response = Result.class)
+    @ApiOperation(value="修改：或者保存联系方式",response = Result.class)
     @RequestMapping(value = "/saveContact",method = RequestMethod.POST)
     public String saveContact(@ApiParam(value = "修改或者保存联系方式",required = true)
                               @RequestBody(required = true) Contact contact) throws Exception {
@@ -319,7 +319,7 @@ public class MenuFunController {
     }
 
     @ResponseBody
-    @ApiOperation(value="获取联系方式",response = Result.class)
+    @ApiOperation(value="获取：联系方式",response = Result.class)
     @RequestMapping(value = "/getContact",method = RequestMethod.GET)
     public String getContact(@ApiParam(value = "机构id",required = true)
                               @RequestParam(required = true) Integer unitId
@@ -330,7 +330,7 @@ public class MenuFunController {
 
 
     @ResponseBody
-    @ApiOperation(value="上传企业产品",response = Result.class)
+    @ApiOperation(value="上传：企业产品",response = Result.class)
     @RequestMapping(value = "/saveProduct",method = RequestMethod.POST)
     public String saveProduct(@ApiParam(value = "企业产品",required = true)
                               @RequestBody(required = true) Product product,
@@ -344,7 +344,7 @@ public class MenuFunController {
     }
 
     @ResponseBody
-    @ApiOperation(value="删除产品",response = Result.class)
+    @ApiOperation(value="删除：产品",response = Result.class)
     @RequestMapping(value = "/deleteProduct",method = RequestMethod.GET)
     public String deleteProduct(@ApiParam(value = "产品id",required = true)
                                 @RequestParam(required = true) Integer id
@@ -354,7 +354,7 @@ public class MenuFunController {
     }
 
     @ResponseBody
-    @ApiOperation(value="获取产品列表",response = Result.class)
+    @ApiOperation(value="获取：产品列表",response = Result.class)
     @RequestMapping(value = "/queryProduct",method = RequestMethod.GET)
     public String queryProduct(@ApiParam(value = "机构id",required = true)
                                @RequestParam(required = true) Integer unitId,
@@ -367,7 +367,7 @@ public class MenuFunController {
 
 
     @ResponseBody
-    @ApiOperation(value="上传帮助",response = Result.class)
+    @ApiOperation(value="上传：帮助",response = Result.class)
     @RequestMapping(value = "/saveHelp",method = RequestMethod.POST)
     public String saveHelp(@ApiParam(value = "帮助",required = true)
                               @RequestBody(required = true) Help help,
@@ -381,7 +381,7 @@ public class MenuFunController {
     }
 
     @ResponseBody
-    @ApiOperation(value="删除帮助",response = Result.class)
+    @ApiOperation(value="删除：帮助",response = Result.class)
     @RequestMapping(value = "/deleteHelp",method = RequestMethod.GET)
     public String deleteHelp(@ApiParam(value = "帮助id",required = true)
                                 @RequestParam(required = true) Integer id
@@ -391,7 +391,7 @@ public class MenuFunController {
     }
 
     @ResponseBody
-    @ApiOperation(value="获取帮助列表",response = Result.class)
+    @ApiOperation(value="获取：帮助列表",response = Result.class)
     @RequestMapping(value = "/queryHelp",method = RequestMethod.GET)
     public String queryHelp(@ApiParam(value = "机构id",required = true)
                             @RequestParam(required = true) Integer unitId,
@@ -406,7 +406,7 @@ public class MenuFunController {
 
 
     @ResponseBody
-    @ApiOperation(value="审核帮助",response = Result.class)
+    @ApiOperation(value="审核：帮助",response = Result.class)
     @RequestMapping(value = "/aggrenHelp",method = RequestMethod.GET)
     public String aggrenHelp(@ApiParam(value = "帮助id",required = true)
                                 @RequestParam(required = true) Integer newId,
@@ -423,7 +423,7 @@ public class MenuFunController {
 
 
     @ResponseBody
-    @ApiOperation(value="删除帮助详情",response = Result.class)
+    @ApiOperation(value="删除：帮助详情",response = Result.class)
     @RequestMapping(value = "/deleteHelpDetail",method = RequestMethod.GET)
     public String deleteHelpDetail(@ApiParam(value = "帮助详情id",required = true)
                              @RequestParam(required = true) Integer id
@@ -433,7 +433,7 @@ public class MenuFunController {
     }
 
     @ResponseBody
-    @ApiOperation(value="获取帮助详情列表",response = Result.class)
+    @ApiOperation(value="获取：帮助详情列表",response = Result.class)
     @RequestMapping(value = "/queryHelpDetail",method = RequestMethod.GET)
     public String queryHelpDetail(@ApiParam(value = "机构id",required = true)
                             @RequestParam(required = true) Integer helpId
@@ -458,7 +458,7 @@ public class MenuFunController {
     }
 
     @ResponseBody
-    @ApiOperation(value="删除分享",response = Result.class)
+    @ApiOperation(value="删除：分享",response = Result.class)
     @RequestMapping(value = "/deleteShare",method = RequestMethod.GET)
     public String deleteShare(@ApiParam(value = "分享id",required = true)
                                    @RequestParam(required = true) Integer id
@@ -468,7 +468,7 @@ public class MenuFunController {
     }
 
     @ResponseBody
-    @ApiOperation(value="获取分享列表",response = Result.class)
+    @ApiOperation(value="获取：分享列表",response = Result.class)
     @RequestMapping(value = "/queryShare",method = RequestMethod.GET)
     public String queryShare(@ApiParam(value = "机构id",required = true)
                              @RequestParam(required = true) Integer unitId,
@@ -482,7 +482,7 @@ public class MenuFunController {
     }
 
     @ResponseBody
-    @ApiOperation(value="审核分享",response = Result.class)
+    @ApiOperation(value="审核：分享",response = Result.class)
     @RequestMapping(value = "/aggrenShare",method = RequestMethod.GET)
     public String aggrenShare(@ApiParam(value = "分享id",required = true)
                              @RequestParam(required = true) Integer newId,
@@ -510,7 +510,7 @@ public class MenuFunController {
     }
 
     @ResponseBody
-    @ApiOperation(value="删除vip付费",response = Result.class)
+    @ApiOperation(value="删除：vip付费",response = Result.class)
     @RequestMapping(value = "/deleteVip",method = RequestMethod.GET)
     public String deleteVip(@ApiParam(value = "付费vipid",required = true)
                               @RequestParam(required = true) Integer id
@@ -520,7 +520,7 @@ public class MenuFunController {
     }
 
     @ResponseBody
-    @ApiOperation(value="获取vip列表",response = Result.class)
+    @ApiOperation(value="获取：vip列表",response = Result.class)
     @RequestMapping(value = "/queryVip",method = RequestMethod.GET)
     public String queryVip(@ApiParam(value = "机构id",required = true)
                              @RequestParam(required = true) Integer unitId
@@ -530,7 +530,7 @@ public class MenuFunController {
     }
 
     @ResponseBody
-    @ApiOperation(value="删除邮件",response = Result.class)
+    @ApiOperation(value="删除：邮件",response = Result.class)
     @RequestMapping(value = "/deleteMail",method = RequestMethod.GET)
     public String deleteMail(@ApiParam(value = "邮件id",required = true)
                             @RequestParam(required = true) Integer id
@@ -540,7 +540,7 @@ public class MenuFunController {
     }
 
     @ResponseBody
-    @ApiOperation(value="获取邮件列表",response = Result.class)
+    @ApiOperation(value="获取：邮件列表",response = Result.class)
     @RequestMapping(value = "/queryMail",method = RequestMethod.GET)
     public String queryMail(HttpServletRequest request) throws Exception {
         User user = (User) request.getSession().getAttribute("user");
@@ -548,5 +548,41 @@ public class MenuFunController {
         return new Result(Result.SUCCESS, mails,"获取成功").toJson();
     }
 
+
+    @ResponseBody
+    @ApiOperation(value="保存：会员单位",response = Result.class)
+    @RequestMapping(value = "/saveVipUnit",method = RequestMethod.POST)
+    public String saveVipUnit(@ApiParam(value = "会员单位",required = true)
+                          @RequestBody(required = true) VipUnit vipUnit,
+                          HttpServletRequest request
+    )  {
+        User user = (User) request.getSession().getAttribute("user");
+        vipUnit.setCreateId(user.getId());
+        vipUnit.setCreateName(user.getName());
+        vipUnit = menuService.saveVipUnit(vipUnit);
+        return new Result(Result.SUCCESS, vipUnit,"保存成功").toJson();
+    }
+
+    @ResponseBody
+    @ApiOperation(value="获取：会员单位列表",response = Result.class)
+    @RequestMapping(value = "/findAllVipUnitByUnitId",method = RequestMethod.GET)
+    public String findAllVipUnitByUnitId(@ApiParam(value = "机构id",required = true)
+                                         @RequestParam(required = true) Integer unitId,
+                                         @ApiParam(value = "公司名字 模糊查询",required = false)
+                                         @RequestParam(required = false) String name
+    )  {
+        List<VipUnit> vipUnits = menuService.findAllVipUnitByUnitId(unitId,name);
+        return new Result(Result.SUCCESS, vipUnits,"获取成功").toJson();
+    }
+
+    @ResponseBody
+    @ApiOperation(value="删除：会员单位",response = Result.class)
+    @RequestMapping(value = "/deleteVipUnit",method = RequestMethod.GET)
+    public String deleteVipUnit(@ApiParam(value = "会员单位id",required = true)
+                                @RequestParam(required = true) Integer id
+    )  {
+        VipUnit vipUnit = menuService.deleteVipUnit(id);
+        return new Result(Result.SUCCESS, vipUnit,"删除成功").toJson();
+    }
 
 }

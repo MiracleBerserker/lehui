@@ -56,6 +56,8 @@ public class MoBanController {
     ShareDao shareDao;
     @Resource
     VipDao vipDao;
+    @Resource
+    VipUnitDao vipUnitDao;
     /**
      * 首页跳转
      * @param req
@@ -86,7 +88,7 @@ public class MoBanController {
                 List<Discover> discovers = discoverDao.findAllByUnitIdAndStatus(unitId,"正常");
                 mv.addObject("discovers",discovers);
                 //注入会员单位
-                List<Unit> units = unitDao.findAllUnit(unitId);
+                List<VipUnit> units = vipUnitDao.findAllByUnitId(unitId);
                 mv.addObject("units",units);
                 //注入轮播图
                 List<LunBoTu> lunBoTus = lunBoTuDao.findAllByUnitIdAndStatusOrderByCreateTimeDesc(unitId,"正常");
@@ -101,11 +103,12 @@ public class MoBanController {
                 //注入活动
                 List<Activity> activities = activityDao.findAllByUnitIdAndStatus(unitId,"正常");
                 mv.addObject("activities",activities);
-
                 //注入分享
                 List<Share> shares = shareDao.findAllByUnitIdAndStatus(unitId,"正常");
+                mv.addObject("shares",shares);
                 //注入会员
                 List<Vip> vips = vipDao.findAllByUnitId(unitId);
+                mv.addObject("vips",vips);
             }else {
                 //注入轮播图
                 List<LunBoTu> lunBoTus = lunBoTuDao.findAllByUnitIdOrderByCreateTimeDesc(unitId);
@@ -143,7 +146,7 @@ public class MoBanController {
             return mv;
         }else {
             mv.addObject("unit",unit);
-            //注入帮助
+            //注入会员收费
             List<Vip> vips = vipDao.findAllByUnitId(unitId);
             mv.addObject("vips",vips);
         }
@@ -298,7 +301,7 @@ public class MoBanController {
         }else {
             mv.addObject("unit",unit);
             //注入会员单位
-            List<Unit> units = unitDao.findAllUnit(unitId);
+            List<VipUnit> units = vipUnitDao.findAllByUnitId(unitId);
             mv.addObject("units",units);
         }
         mv.setViewName(unit.getTemplate()+"/chember_member_detail.html");

@@ -459,4 +459,198 @@ public class PrivilegeController {
         return new Result(Result.SUCCESS, systemHelps,"查询成功").toJson();
     }
 
+
+    @ResponseBody
+    @ApiOperation(value="保存：收费项目",response = Result.class)
+    @RequestMapping(value = "/saveCost",method = RequestMethod.POST)
+    public String saveCost(
+            @ApiParam(value = "type 和 unitType 是必填的 type 是技术服务收费 还是代管收费  unitType 代表是企业 或者商会的收费项目", required = true)
+            @RequestBody Cost cost
+    ) throws Exception {
+         cost = privilegeService.saveCost(cost);
+        return new Result(Result.SUCCESS, cost,"保存成功").toJson();
+    }
+
+    @ResponseBody
+    @ApiOperation(value="更新：收费项目",response = Result.class)
+    @RequestMapping(value = "/updateCost",method = RequestMethod.POST)
+    public String updateCost(
+            @ApiParam(value = "更新记得带id哦", required = true)
+            @RequestBody Cost cost
+    )  {
+        cost = privilegeService.updateCost(cost);
+        return new Result(Result.SUCCESS, cost,"更新成功").toJson();
+    }
+
+    @ResponseBody
+    @ApiOperation(value="获取：指定id的收费项目",response = Result.class)
+    @RequestMapping(value = "/getCost",method = RequestMethod.GET)
+    public String getCost(
+            @ApiParam(value = "收费项目id", required = true)
+            @RequestParam Integer id
+    )  {
+        Cost cost = privilegeService.getCost(id);
+        return new Result(Result.SUCCESS, cost,"获取成功").toJson();
+    }
+
+    @ResponseBody
+    @ApiOperation(value="获取：关闭指定的收费项目",response = Result.class)
+    @RequestMapping(value = "/closeCost",method = RequestMethod.GET)
+    public String closeCost(
+            @ApiParam(value = "收费项目id 讲收费项目状态设置为失效并未真正的删除", required = true)
+            @RequestParam Integer id
+    )  {
+        Cost cost = privilegeService.closeCost(id);
+        return new Result(Result.SUCCESS, cost,"关闭成功").toJson();
+    }
+
+    @ResponseBody
+    @ApiOperation(value="获取：收费项目列表",response = Result.class)
+    @RequestMapping(value = "/findAllCostByTypeAndUnitType",method = RequestMethod.GET)
+    public String findAllCostByTypeAndUnitType(
+            @ApiParam(value = "收费项目类型", required = true)
+            @RequestParam String type,
+            @ApiParam(value = "收费项目所属类型 企业 还是商会 传的话 都返回", required = false)
+                @RequestParam(required = false) String unitType,
+            @ApiParam(value = "状态  正常 和失效", required = true)
+            @RequestParam String status
+    )  {
+        List<Cost> costs = privilegeService.findAllCostByTypeAndUnitType(type,unitType,status);
+        return new Result(Result.SUCCESS, costs,"关闭成功").toJson();
+    }
+
+    @ResponseBody
+    @ApiOperation(value="支付：收费项目缴费",response = Result.class)
+    @RequestMapping(value = "/savePayment",method = RequestMethod.POST)
+    public String savePayment(HttpServletRequest request,
+            @ApiParam(value = "costId 和 unitId 是必须的 其它都可以不要 costId 就是他选择那个收费项目的id", required = true)
+            @RequestBody Payment payment
+    ) throws Exception {
+        User user = (User) request.getSession().getAttribute("user");
+        payment = privilegeService.savePayment(payment,user);
+        return new Result(Result.SUCCESS, payment,"更新成功").toJson();
+    }
+
+    @ResponseBody
+    @ApiOperation(value="获取：收费项目缴费情况列表",response = Result.class)
+    @RequestMapping(value = "/findPayment",method = RequestMethod.GET)
+    public String findPayment(
+            @ApiParam(value = "缴费组织id 不传返回所有组织的", required = false)
+            @RequestParam(required = false) Integer unitId,
+            @ApiParam(value = "收费项目id 不传返回所有收费项目的", required = false)
+            @RequestParam(required = false) Integer costId
+    )  {
+        List<Payment> payments = privilegeService.findPayment(costId,unitId);
+        return new Result(Result.SUCCESS, payments,"查询成功").toJson();
+    }
+
+    @ResponseBody
+    @ApiOperation(value="获取：收费项目缴费情况列表",response = Result.class)
+    @RequestMapping(value = "/findPaymentExt",method = RequestMethod.GET)
+    public String findPaymentExt(
+            @ApiParam(value = "type 消费的cost类型", required = true)
+            @RequestParam String type,
+            @ApiParam(value = "公司名称 有就模糊查询 不传就默认返回全部类型的", required = false)
+            @RequestParam(required = false) String name
+    )  {
+        List<Payment> payments = privilegeService.findPayment(type,name);
+        return new Result(Result.SUCCESS, payments,"查询成功").toJson();
+    }
+
+
+    @ResponseBody
+    @ApiOperation(value="获取：用户对应的模版地址",response = Result.class)
+    @RequestMapping(value = "/getUnitUrl",method = RequestMethod.GET)
+    public String getUnitUrl(
+            @ApiParam(value = "用户id", required = true)
+            @RequestParam(required = true) Integer userId
+    ){
+        Map<String,String> map = userService.getUnitUrl(userId);
+        return new Result(Result.SUCCESS, map,"查询成功").toJson();
+    }
+
+    @ResponseBody
+    @ApiOperation(value="获取：当前组织消费的流水账单",response = Result.class)
+    @RequestMapping(value = "/findAllFlowBills",method = RequestMethod.GET)
+    public String findAllFlowBills(
+            @ApiParam(value = "组织id", required = false)
+            @RequestParam(required = false) Integer unitId,
+            @ApiParam(value = "消费项目id", required = false)
+            @RequestParam(required = false) Integer costId
+    ){
+        List<FlowBills> flowBills = privilegeService.findAllFlowBills(unitId,costId);
+        return new Result(Result.SUCCESS, flowBills,"查询成功").toJson();
+    }
+
+    @ResponseBody
+    @ApiOperation(value="获取：当前用户的流水账单",response = Result.class)
+    @RequestMapping(value = "/findAllFlowBillsByUserId",method = RequestMethod.GET)
+    public String findAllFlowBillsByUserId(
+            @ApiParam(value = "用户id", required = true)
+            @RequestParam(required = true) Integer userId
+    ){
+        List<FlowBills> flowBills = privilegeService.findAllFlowBillsByUserId(userId);
+        return new Result(Result.SUCCESS, flowBills,"查询成功").toJson();
+    }
+
+    @ResponseBody
+    @ApiOperation(value="获取：当前payment统计账单的流水详情",response = Result.class)
+    @RequestMapping(value = "/findAllFlowBillsByPayId",method = RequestMethod.GET)
+    public String findAllFlowBillsByPayId(
+            @ApiParam(value = "payId", required = true)
+            @RequestParam(required = true) Integer payId
+    ){
+        List<FlowBills> flowBills = privilegeService.findAllFlowBillsByPayId(payId);
+        return new Result(Result.SUCCESS, flowBills,"查询成功").toJson();
+    }
+
+
+    @ResponseBody
+    @ApiOperation(value="增加：新增站点",response = Result.class)
+    @RequestMapping(value = "/addSite",method = RequestMethod.GET)
+    public String addSite(
+            @ApiParam(value = "paymentId", required = true)
+            @RequestParam(required = true) Integer paymentId,
+            @ApiParam(value = "site", required = true)
+            @RequestParam(required = true) String site
+    ){
+        site = privilegeService.addSite(site,paymentId);
+        return new Result(Result.SUCCESS, site,"查询成功").toJson();
+    }
+
+
+    @ResponseBody
+    @ApiOperation(value="增加：意见反馈",response = Result.class)
+    @RequestMapping(value = "/addFeedback",method = RequestMethod.POST)
+    public String addFeedback(HttpServletRequest request,
+                              @ApiParam(value = "自己看着填什么", required = true)
+                              @RequestBody Feedback feedback
+    ) throws Exception {
+        User user = (User) request.getSession().getAttribute("user");
+        feedback = privilegeService.addFeedback(feedback,user);
+        return new Result(Result.SUCCESS, feedback,"更新成功").toJson();
+    }
+
+    @ResponseBody
+    @ApiOperation(value="删除：意见反馈",response = Result.class)
+    @RequestMapping(value = "/deleteFeedback",method = RequestMethod.GET)
+    public String deleteFeedback(
+            @ApiParam(value = "消费项目id", required = true)
+            @RequestParam Integer id
+    ){
+        Feedback feedback = privilegeService.deleteFeedback(id);
+        return new Result(Result.SUCCESS, feedback,"查询成功").toJson();
+    }
+
+
+    @ResponseBody
+    @ApiOperation(value="查询：意见反馈列表",response = Result.class)
+    @RequestMapping(value = "/getAllFeedback",method = RequestMethod.GET)
+    public String getAllFeedback(){
+        List<Feedback> feedbacks = privilegeService.getAllFeedback();
+        return new Result(Result.SUCCESS, feedbacks,"查询成功").toJson();
+    }
+
+
+
 }

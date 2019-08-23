@@ -8,7 +8,7 @@
   color: #fff;
 }
 
-.header  > img {
+.header>img {
   width: 28px;
   height: 22px;
   position: absolute;
@@ -232,6 +232,8 @@ input {
   }
 
   .nav-pills li {
+    width: 150px;
+    text-align: center;
     cursor: pointer;
   }
 
@@ -370,6 +372,9 @@ input {
 }
 @media screen and (min-width: 1080px) {
   .production-img, .news-img {
+    height: 250px;
+  }
+  .production-img img, .news-img img {
     height: 250px;
   }
   .news-info, .production-info {

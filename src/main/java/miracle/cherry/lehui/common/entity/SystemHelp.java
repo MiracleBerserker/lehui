@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @Description:
  */
 @Entity
-@Table(name = "SOURCEMATERIAL")
+@Table(name = "SYSTEMHELP")
 public class SystemHelp implements Serializable {
 
     private static final long serialVersionUID = 873516308888200831L;

@@ -6,8 +6,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import miracle.cherry.lehui.common.config.MyConfig;
+import miracle.cherry.lehui.common.entity.SystemHelp;
 import miracle.cherry.lehui.common.entity.Unit;
 import miracle.cherry.lehui.common.entity.User;
+import miracle.cherry.lehui.common.service.PrivilegeService;
 import miracle.cherry.lehui.common.service.UnitService;
 import miracle.cherry.lehui.common.service.UserService;
 import miracle.cherry.lehui.common.tools.QRCodeUtil;
@@ -51,6 +53,9 @@ public class AccountController {
 
     @Resource
     MenuService menuService;
+
+    @Resource
+    PrivilegeService privilegeService;
 
     @Resource
     MyConfig myConfig;
@@ -251,5 +256,17 @@ public class AccountController {
         outputStream.close();
     }
 
+    @ResponseBody
+    @ApiOperation(value="获取：查询所有系统帮助 支持根据问题名称进行模糊查询",response = Result.class)
+    @RequestMapping(value = "/getAllSystemHelp",method = RequestMethod.GET)
+    public String getAllSystemHelp(
+            @ApiParam(value = "type 可以不传 传的话会进行区分", required = false)
+            @RequestParam(required = false) String type,
+            @ApiParam(value = "problem 问题名称 传的话 会根据这个进行模糊匹配", required = false)
+            @RequestParam(required = false) String problem
+    )  {
+        List<SystemHelp> systemHelps = privilegeService.getAllSystemHelp(type,problem);
+        return new Result(Result.SUCCESS, systemHelps,"查询成功").toJson();
+    }
 
 }

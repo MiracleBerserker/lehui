@@ -13,10 +13,7 @@ import sun.misc.BASE64Decoder;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @Description:
@@ -124,6 +121,7 @@ public class UserService {
         if(roleUser == null){
             roleUser = new RoleUser();
         }
+        roleUser.setuId(user.getId());
         roleUser.setUnitId(Unit.ADMIN_SHID);
         roleUser.setrId(Role.ADMIN_MANAGER_ROLE);
         roleUserDao.save(roleUser);
@@ -315,5 +313,25 @@ public class UserService {
         }
        return users;
     }
+
+    public Map<String,String> getUnitUrl(Integer userId){
+        User user = userDao.findById(userId).get();
+        Map<String,String> map = new HashMap<>();
+        if(user.getQyId()!=null){
+            Unit unit = unitDao.findById(user.getQyId()).get();
+            map.put("企业",unit.getUrl());
+        }else if(user.getQyId()==null) {
+            map.put("企业",null);
+        }
+
+        if(user.getShId()!=null){
+            Unit unit = unitDao.findById(user.getShId()).get();
+            map.put("商会",unit.getUrl());
+        }else if(user.getShId()==null){
+            map.put("商会",null);
+        }
+        return map;
+    }
+
 
 }

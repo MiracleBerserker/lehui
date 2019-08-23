@@ -28,9 +28,11 @@
 
   <div class="container pc-show">
     <ul class="nav nav-pills">
+      <li><a th:href="@{'/index/'+${unit.id}+'#introduction'}">简介</a></li>
       <li><a th:href="@{'/index/'+${unit.id}+'/products'}">业务(产品)</a></li>
       <li><a th:href="@{'/index/'+${unit.id}+'/news'}">新闻</a></li>
       <li><a th:href="@{'/index/'+${unit.id}+'/activities'}">活动</a></li>
+      <li><a th:href="@{'/index/'+${unit.id}+'#contract'}">联系方式</a></li>
     </ul>
   </div>
 
