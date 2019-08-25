@@ -64,6 +64,8 @@ public class UserService {
 
     public User register(User user) throws Exception {
 
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
         //检测账号是否已经存在
         if(userDao.findByAccount(user.getAccount()) != null){
             throw new Exception("用户已存在");
@@ -74,6 +76,7 @@ public class UserService {
         user.setQyId(null);
         //保存用户
         user.setState("正常");
+        user.setRegisterTime(simpleDateFormat.format(new Date()));
         user.setImg(myConfig.getDefaultImg());
         userDao.save(user);
         //保存文件替换地址
@@ -218,10 +221,21 @@ public class UserService {
      */
     public User editUser(User user){
         User userRel = userDao.findById(user.getId()).get();
-        userRel.setName(user.getName());
-        userRel.setMail(user.getMail());
-        userRel.setWechat(user.getWechat());
-        userRel.setPassword(user.getPassword());
+        if(user.getName()!=null){
+            userRel.setName(user.getName());
+        }
+        if(user.getMail()!=null){
+            userRel.setMail(user.getMail());
+        }
+        if(user.getWechat()!=null){
+            userRel.setWechat(user.getWechat());
+        }
+        if(user.getPassword()!=null){
+            userRel.setPassword(user.getPassword());
+        }
+        if(user.getAccount()!=null){
+            userRel.setAccount(user.getAccount());
+        }
         userRel = userDao.saveAndFlush(userRel);
         return userRel;
     }

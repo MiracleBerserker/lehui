@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -57,4 +58,41 @@ public interface UserDao  extends JpaRepository<User, Integer> {
 
     @Query(value = "select * from user u where(u.account like %:condition% or u.name like %:condition%)", nativeQuery = true)
     List<User> findByConditions(@Param("condition")String condition);
+
+    /**
+     * 获取当日的收入
+     * @return
+     */
+    @Query(value = "SELECT SUM(f.money)AS num  FROM  flowbills f " +
+            "WHERE DATE_FORMAT(NOW(),'%Y-%m-%d') <= f.create_time", nativeQuery = true)
+    Map<String,String> getDayMoney();
+
+    /**
+     * 获取当月的收入
+     * @return
+     */
+    @Query(value = "SELECT SUM(f.money)AS num  FROM  flowbills f " +
+            "WHERE DATE_ADD(CURDATE(), INTERVAL - DAY(CURDATE()) + 1 DAY)<=f.create_time",nativeQuery = true)
+    Map<String,String> getMonthMoney();
+
+    /**
+     * 获取所有收入
+     * @return
+     */
+    @Query(value = "SELECT SUM(f.money)AS num  FROM  flowbills f ",nativeQuery = true)
+    Map<String,String> getAllMoney();
+
+
+    @Query(value = "SELECT COUNT(u.id) AS num  FROM  user u " +
+            "WHERE DATE_FORMAT(NOW(),'%Y-%m-%d')<=u.register_time",nativeQuery = true)
+    Map<String,String> getDayUser();
+
+    @Query(value = "SELECT COUNT(u.id) AS num  FROM  user u " +
+            "WHERE DATE_ADD(CURDATE(), INTERVAL - DAY(CURDATE()) + 1 DAY)<=u.register_time",nativeQuery = true)
+    Map<String,String> getMonthUser();
+
+
+    @Query(value = "SELECT COUNT(u.id) AS num  FROM  user u ",nativeQuery = true)
+    Map<String,String> getAllUser();
+
 }

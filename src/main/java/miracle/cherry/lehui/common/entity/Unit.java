@@ -17,7 +17,7 @@ import java.util.List;
 public class Unit implements Serializable {
 
 
-    public static Integer ADMIN_SHID=80;
+    public static final Integer ADMIN_SHID=80;
 
     private static final long serialVersionUID = 8735132088673200831L;
     @Id

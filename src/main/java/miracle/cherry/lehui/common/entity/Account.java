@@ -1,5 +1,7 @@
 package miracle.cherry.lehui.common.entity;
 
+import org.springframework.context.annotation.Primary;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -16,6 +18,9 @@ import java.io.Serializable;
 public class Account implements Serializable {
 
     private static final long serialVersionUID = 873513742573200831L;
+
+    public static final String ACCOUNT_STATE_NORMAL="正常";
+    public static final String ACCOUNT_STATE_EXEPETION="异常";
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;

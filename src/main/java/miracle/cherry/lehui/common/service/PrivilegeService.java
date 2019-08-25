@@ -1,9 +1,11 @@
 package miracle.cherry.lehui.common.service;
 
+import io.swagger.models.auth.In;
 import miracle.cherry.lehui.common.config.MyConfig;
 import miracle.cherry.lehui.common.dao.*;
 import miracle.cherry.lehui.common.entity.*;
 import miracle.cherry.lehui.moban.dao.MailDao;
+import miracle.cherry.lehui.moban.service.MenuService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -54,7 +56,15 @@ public class PrivilegeService {
     FeedbackDao feedbackDao;
     @Resource
     MyConfig myConfig;
+    @Resource
+    AccountDao accountDao;
+    @Resource
+    BankCardDao bankCardDao;
+    @Resource
+    WithdrawalDao withdrawalDao;
 
+    @Resource
+    MenuService menuService;
     /**
      * 保存权限
      * @param privilege
@@ -262,6 +272,7 @@ public class PrivilegeService {
      * @throws Exception
      */
     public Cost saveCost(Cost cost) throws Exception {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         if(cost.getUnitType()==null||"".equals(cost.getUnitType())){
             throw new Exception("unitType 不能为空 必须是企业  或者 商会");
         }
@@ -269,6 +280,7 @@ public class PrivilegeService {
             throw new Exception("type 不能为空 必须写明是那种类型的付费项目");
         }
         cost.setStatus(Cost.STATUS_NORMAL);
+        cost.setMoney(Math.abs(cost.getMoney()));
         String mu = cost.getMoney()+"";
         if(cost.getMeasurement().equals(Cost.STATUS_COSTUNIT_DAY)){
             mu+="元/"+cost.getNums()+"天";
@@ -278,13 +290,16 @@ public class PrivilegeService {
             mu+="元/"+cost.getNums()+"年";
         }
         cost.setMoneymea(mu);
+        cost.setStartDateTime(simpleDateFormat.format(new Date()));
         costDao.save(cost);
         return cost;
     }
 
     public Cost closeCost(Integer id){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Cost cost = costDao.findById(id).get();
         cost.setStatus(Cost.STATUS_SHIXIAO);
+        cost.setEndDateTime(simpleDateFormat.format(new Date()));
         costDao.save(cost);
         return cost;
     }
@@ -320,7 +335,7 @@ public class PrivilegeService {
         Unit unit = unitDao.findById(payment.getUnitId()).get();
         Cost cost = costDao.findById(payment.getCostId()).get();
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         if(cost==null||unit==null){
             throw new Exception("支付出现故障无法正常支付");
         }
@@ -329,6 +344,7 @@ public class PrivilegeService {
         if(pp!=null){
             calendar.setTime(simpleDateFormat.parse(pp.getEndTime()));
             payment.setId(pp.getId());
+            payment.setStartTime(pp.getStartTime());
         }else {
             payment.setStartTime(simpleDateFormat.format(new Date()));
         }
@@ -424,16 +440,20 @@ public class PrivilegeService {
 
 
     public String addSite(String site,Integer paymentId){
+        String url = "";
+        Payment payment = paymentDao.findById(paymentId).get();
         if(site==null||"".equals(site)){
-            return null;
+            url = myConfig.getUrl()+payment.getUnitId();
+        }else {
+            url = myConfig.getHttp()+site.trim()+myConfig.getIndex()+payment.getUnitId();
         }
         //保存到payment
-        Payment payment = paymentDao.findById(paymentId).get();
-        payment.setUrl(myConfig.getHttp()+site.trim()+myConfig.getIndex());
+
+        payment.setUrl(url);
         paymentDao.save(payment);
         //保存到unit
         Unit unit = unitDao.findById(payment.getUnitId()).get();
-        unit.setUrl(myConfig.getHttp()+site.trim()+myConfig.getIndex());
+        unit.setUrl(url);
         unitDao.save(unit);
         return site;
     }
@@ -446,7 +466,7 @@ public class PrivilegeService {
        if(unit==null){
            return null;
        }
-       SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+       SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
        feedback.setDate(simpleDateFormat.format(new Date()));
        feedback.setUserName(user.getName());
        feedback.setUnitId(unit.getId());
@@ -466,6 +486,196 @@ public class PrivilegeService {
 
     public List<Feedback> getAllFeedback(){
         return feedbackDao.findAll();
+    }
+
+
+    /**
+     * 获取用户账户 如果没有账户就默认创建
+     * @param user
+     * @return
+     */
+    public Account getAccount(User user){
+        if(user.getId()==null){
+            return null;
+        }
+        //获取当前用户账号
+        Account account = accountDao.getByUserId(user.getId());
+        if(account == null){
+            account = new Account();
+            account.setUserId(user.getId());
+            account.setBalance(0);
+            account.setState(Account.ACCOUNT_STATE_NORMAL);
+            accountDao.save(account);
+        }
+        return account;
+    }
+
+    /**
+     * 保存银行卡
+     * @param card
+     * @param user
+     * @return
+     */
+    public BankCard addBankCard(BankCard card,User user){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        card.setDateTime(simpleDateFormat.format(new Date()));
+        card.setUserId(user.getId());
+        bankCardDao.save(card);
+        return card;
+    }
+
+    public BankCard getBankCardById(Integer id){
+        BankCard card = bankCardDao.findById(id).get();
+        return card;
+    }
+
+    public BankCard deleteBankCard(Integer id,Integer userId){
+        if(id==null){
+            return null;
+        }
+        BankCard card = bankCardDao.findByIdAndUserId(id,userId);
+        bankCardDao.delete(card);
+        return card;
+    }
+
+    public List<BankCard> findAllBankCard(Integer userId){
+        List<BankCard> bankCards = bankCardDao.findAllByUserId(userId);
+        return bankCards;
+    }
+
+    public Withdrawal addWithdrawal(Withdrawal withdrawal,User user) throws Exception {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Account account = accountDao.findByUserIdAndState(user.getId(),Account.ACCOUNT_STATE_NORMAL);
+        withdrawal.setWithdrawMoney(Math.abs(withdrawal.getWithdrawMoney()));
+        if(account==null){
+            throw new Exception("账户不存在或者异常 无法进行操作");
+        }
+        if(withdrawal.getType().equals(Withdrawal.WITHDRAWAL_TYPE_ZC)){
+           if(withdrawal.getWithdrawMoney()>account.getBalance()){
+               throw new Exception("你的余额不足 无法申请提现");
+           }
+            BankCard bankCard = bankCardDao.findById(withdrawal.getBankCardId()).get();
+            if(bankCard==null){
+                throw new Exception("无法查询到银行卡信息 无法进行操作");
+            }
+            withdrawal.setStartDateTime(simpleDateFormat.format(new Date()));
+            withdrawal.setBankCard(bankCard.getBankNumber());
+            withdrawal.setBankName(bankCard.getBankName());
+            withdrawal.setBankTel(bankCard.getTel());
+            withdrawal.setState(Withdrawal.WITHDRAWAL_STATE_SHZ);
+            withdrawal.setTel(user.getAccount());
+            withdrawal.setName(user.getName());
+            withdrawal.setUserId(user.getId());
+            account.setBalance(account.getBalance()-withdrawal.getWithdrawMoney());
+            withdrawal.setBalance(account.getBalance());
+            accountDao.save(account);
+        }else{
+            throw new Exception("非法类型禁止操作");
+        }
+        withdrawalDao.save(withdrawal);
+        return withdrawal;
+    }
+
+    /**
+     * 更新提现状态
+     */
+    public void updateWithdrawal(String state,Integer id,User user) throws Exception {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        if(state==null){
+            return;
+        }
+        Withdrawal withdrawal = withdrawalDao.findById(id).get();
+        if(withdrawal==null){
+            throw new Exception("不存在该申请 无法进行操作");
+        }
+        if(withdrawal.getState().equals(Withdrawal.WITHDRAWAL_STATE_FAIL)&&state.equals(Withdrawal.WITHDRAWAL_STATE_SHZ)){
+            withdrawal.setState(state);
+            Account account = accountDao.getByUserId(withdrawal.getUserId());
+            account.setBalance(account.getBalance()-withdrawal.getWithdrawMoney());
+            accountDao.save(account);
+            withdrawal.setBalance(account.getBalance());
+            withdrawal.setStartDateTime(simpleDateFormat.format(new Date()));
+            withdrawalDao.save(withdrawal);
+            return;
+        }
+
+        if(user.getShId()!=Unit.ADMIN_SHID){
+            throw new Exception("非法操作行为 请停止操作");
+        }
+        if(Withdrawal.WITHDRAWAL_STATE_SHZ.equals(withdrawal.getState())&&state.equals(Withdrawal.WITHDRAWAL_STATE_CLZ)){
+            withdrawal.setState(state);
+        }else if(Withdrawal.WITHDRAWAL_STATE_CLZ.equals(withdrawal.getState())&&state.equals(Withdrawal.WITHDRAWAL_STATE_NORMAL)) {
+            withdrawal.setState(state);
+        } else if(Withdrawal.WITHDRAWAL_STATE_SHZ.equals(withdrawal.getState())&&state.equals(Withdrawal.WITHDRAWAL_STATE_FAIL)){
+            Account account = accountDao.getByUserId(withdrawal.getUserId());
+            account.setBalance(account.getBalance()+withdrawal.getWithdrawMoney());
+            accountDao.save(account);
+            withdrawal.setState(state);
+            //发送失败邮件
+            menuService.sendMail("尊敬的用户,非常抱歉您于"+withdrawal.getStartDateTime()+",申请提现"+withdrawal.getWithdrawMoney()
+                    +"元,没有通过审核 如果有疑问请咨询乐汇公司",withdrawal.getUserId());
+        }else if(Withdrawal.WITHDRAWAL_STATE_CLZ.equals(withdrawal.getState())&&state.equals(Withdrawal.WITHDRAWAL_STATE_FAIL)){
+            Account account = accountDao.getByUserId(withdrawal.getUserId());
+            account.setBalance(account.getBalance()+withdrawal.getWithdrawMoney());
+            accountDao.save(account);
+            withdrawal.setState(state);
+            //发送失败邮件
+            menuService.sendMail("尊敬的用户,非常抱歉您于"+withdrawal.getStartDateTime()+",申请提现"+withdrawal.getWithdrawMoney()
+                    +"元,没有通过审核 如果有疑问请咨询乐汇公司",withdrawal.getUserId());
+        }else {
+            throw new Exception("非法操作行为 请停止操作");
+        }
+
+        withdrawalDao.save(withdrawal);
+    }
+
+    public Withdrawal getWithdrawal(Integer id,User user){
+        Withdrawal withdrawal = null;
+        if(user.getShId()!=Unit.ADMIN_SHID){
+            withdrawal = withdrawalDao.findById(id).get();
+        }else {
+            withdrawal = withdrawalDao.findByIdAndUserId(id,user.getId());
+        }
+
+        return withdrawal;
+    }
+
+    public List<Withdrawal> findAllWithdrawal(String type,String state,String name,User user) throws Exception {
+        if(user.getShId()!=Unit.ADMIN_SHID){
+            throw new Exception("非法操作行为 请停止操作");
+        }
+        List<Withdrawal> withdrawals = null;
+        if(type ==null || state==null){
+            return null;
+        }
+        if(name==null){
+            withdrawals= withdrawalDao.findAllByStateAndType(state,type);
+        }else {
+            withdrawals = withdrawalDao.findAllByStateAndTypeAndName(state,type,name);
+        }
+        return withdrawals;
+    }
+
+
+    public List<Withdrawal> findAllWithdrawalByUser(Integer userId){
+        List<Withdrawal> withdrawals = null;
+        withdrawals = withdrawalDao.findAllByUserId(userId);
+        return withdrawals;
+    }
+
+    /**
+     * 统计一些基本信息
+     * @return
+     */
+    public Map<String,String> getReport(){
+        Map<String,String> map = new HashMap<>();
+        map.put("dayMoney",userDao.getDayMoney().get("num"));
+        map.put("monthMoney",userDao.getMonthMoney().get("num"));
+        map.put("allMoney",userDao.getAllMoney().get("num"));
+        map.put("dayUser",userDao.getDayUser().get("num"));
+        map.put("monthUser",userDao.getMonthUser().get("num"));
+        map.put("allUser",userDao.getAllUser().get("num"));
+        return map;
     }
 
 }

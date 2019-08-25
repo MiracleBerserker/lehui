@@ -41,6 +41,10 @@ public class User implements Serializable {
     private Integer qyId;
     @Column(length = 50)
     private String state;
+    @Column(length = 50)
+    private String registerTime;
+    @Column(length = 50)
+    private String type;
     @Transient
     private Unit qy;
     @Transient
@@ -142,6 +146,23 @@ public class User implements Serializable {
 
     public void setImg(String img) {
         this.img = img;
+    }
+
+
+    public String getRegisterTime() {
+        return registerTime;
+    }
+
+    public void setRegisterTime(String registerTime) {
+        this.registerTime = registerTime;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override

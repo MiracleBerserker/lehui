@@ -90,6 +90,13 @@ public class MenuService {
         return news;
     }
 
+    public New getNewById(Integer id){
+        New neww = newDao.findById(id).get();
+        NewDetails newDetails = newDetailsDao.findByNid(neww.getId());
+        neww.setNewDetails(newDetails);
+        return neww;
+    }
+
     public void deleteNew(Integer newId){
         New news = newDao.getOne(newId);
         newDao.delete(news);
@@ -307,6 +314,11 @@ public class MenuService {
         return discover;
     }
 
+
+    public Discover getDiscoverById(Integer id){
+        return discoverDao.findById(id).get();
+    }
+
     /**
      * 上传轮播图
      * @param
@@ -369,6 +381,10 @@ public class MenuService {
         return queryLunBoTu;
     }
 
+    public LunBoTu getLunBoTuById(Integer id){
+        return lunBoTuDao.findById(id).get();
+    }
+
     /**
      * 更新和修改联系方式
      * @param contact
@@ -405,6 +421,10 @@ public class MenuService {
         product.setStatus(getStatus(product.getUnitId()));
         product = productDao.save(product);
         return product;
+    }
+
+    public Product getProductById(Integer id){
+        return productDao.findById(id).get();
     }
 
     /**
@@ -481,6 +501,10 @@ public class MenuService {
         helpDetailDao.deleteAll(helpDetails);
         helpDao.delete(help);
         return help;
+    }
+
+    public Help getHelpById(Integer id){
+        return helpDao.findById(id).get();
     }
 
     /**
@@ -602,7 +626,9 @@ public class MenuService {
     }
 
 
-
+    public Share getShareById(Integer id){
+        return shareDao.findById(id).get();
+    }
 
 
     /**
@@ -640,6 +666,9 @@ public class MenuService {
         return vip;
     }
 
+    public Vip getVipById(Integer id){
+        return vipDao.findById(id).get();
+    }
 
     private String getStatus(Integer unitId) throws Exception {
             String status = "正常";

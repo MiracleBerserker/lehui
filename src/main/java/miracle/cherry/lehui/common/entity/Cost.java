@@ -45,6 +45,10 @@ public class Cost  implements Serializable {
     private String status;
     @Column
     private Integer nums;
+    @Column
+    private String startDateTime;
+    @Column
+    private String endDateTime;
 
     public Integer getId() {
         return id;
@@ -124,5 +128,21 @@ public class Cost  implements Serializable {
 
     public void setNums(Integer nums) {
         this.nums = nums;
+    }
+
+    public String getStartDateTime() {
+        return startDateTime;
+    }
+
+    public void setStartDateTime(String startDateTime) {
+        this.startDateTime = startDateTime;
+    }
+
+    public String getEndDateTime() {
+        return endDateTime;
+    }
+
+    public void setEndDateTime(String endDateTime) {
+        this.endDateTime = endDateTime;
     }
 }

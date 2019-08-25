@@ -54,6 +54,17 @@ public class MenuFunController {
     }
 
     @ResponseBody
+    @ApiOperation(value="获取：通过id获取新闻",response = Result.class)
+    @RequestMapping(value = "/getNewById",method = RequestMethod.GET)
+    public String getNewById( @ApiParam(value = "新闻id",required = true)
+                           @RequestParam
+                            Integer id)  {
+        New neww = menuService.getNewById(id);
+        return new Result(Result.SUCCESS, neww,"获取成功").toJson();
+    }
+
+
+    @ResponseBody
     @ApiOperation(value="上传：新闻",response = Result.class)
     @RequestMapping(value = "/saveNews",method = RequestMethod.POST)
     public String saveNews(@ApiParam(value = "新闻列表",required = true)
@@ -109,6 +120,17 @@ public class MenuFunController {
         activity.setName(user.getName());
         activity = menuService.saveActivity(activity);
         return new Result(Result.SUCCESS, activity,"上传成功").toJson();
+    }
+
+
+    @ResponseBody
+    @ApiOperation(value="获取：通过id获取活动",response = Result.class)
+    @RequestMapping(value = "/getActivityById",method = RequestMethod.GET)
+    public String getActivityById( @ApiParam(value = "新闻id",required = true)
+                                   @RequestParam
+                                   Integer id)  {
+        Activity activity = menuService.getActivity(id);
+        return new Result(Result.SUCCESS, activity,"获取成功").toJson();
     }
 
 
@@ -228,6 +250,17 @@ public class MenuFunController {
 
 
     @ResponseBody
+    @ApiOperation(value="获取：通过id获取发现",response = Result.class)
+    @RequestMapping(value = "/getDiscoverById",method = RequestMethod.GET)
+    public String getDiscoverById( @ApiParam(value = "新闻id",required = true)
+                                   @RequestParam
+                                   Integer id)  {
+        Discover discover = menuService.getDiscoverById(id);
+        return new Result(Result.SUCCESS, discover,"获取成功").toJson();
+    }
+
+
+    @ResponseBody
     @ApiOperation(value="获取：发现列表",response = Result.class)
     @RequestMapping(value = "/queryDiscover",method = RequestMethod.GET)
     public String queryDiscover(@ApiParam(value = "机构id",required = true)
@@ -308,6 +341,18 @@ public class MenuFunController {
         return new Result(Result.SUCCESS, lunBoTu,"删除成功").toJson();
     }
 
+
+    @ResponseBody
+    @ApiOperation(value="获取：通过id获取轮播图",response = Result.class)
+    @RequestMapping(value = "/getLunBoTuById",method = RequestMethod.GET)
+    public String getLunBoTuById( @ApiParam(value = "新闻id",required = true)
+                                   @RequestParam
+                                           Integer id)  {
+        LunBoTu lunBoTu = menuService.getLunBoTuById(id);
+        return new Result(Result.SUCCESS, lunBoTu,"获取成功").toJson();
+    }
+
+
     @ResponseBody
     @ApiOperation(value="修改：或者保存联系方式",response = Result.class)
     @RequestMapping(value = "/saveContact",method = RequestMethod.POST)
@@ -352,6 +397,18 @@ public class MenuFunController {
         Product product = menuService.deleteProduct(id);
         return new Result(Result.SUCCESS, product,"删除成功").toJson();
     }
+
+
+    @ResponseBody
+    @ApiOperation(value="获取：通过id获取产品",response = Result.class)
+    @RequestMapping(value = "/getProductById",method = RequestMethod.GET)
+    public String getProductById( @ApiParam(value = "新闻id",required = true)
+                                  @RequestParam
+                                          Integer id)  {
+        Product product = menuService.getProductById(id);
+        return new Result(Result.SUCCESS, product,"获取成功").toJson();
+    }
+
 
     @ResponseBody
     @ApiOperation(value="获取：产品列表",response = Result.class)
@@ -402,6 +459,17 @@ public class MenuFunController {
         User user = (User) request.getSession().getAttribute("user");
         List<Help> helps = menuService.queryHelp(unitId,status,user.getId());
         return new Result(Result.SUCCESS, helps,"获取成功").toJson();
+    }
+
+
+    @ResponseBody
+    @ApiOperation(value="获取：通过id获取帮助",response = Result.class)
+    @RequestMapping(value = "/getHelpById",method = RequestMethod.GET)
+    public String getHelpById( @ApiParam(value = "新闻id",required = true)
+                                  @RequestParam
+                                          Integer id)  {
+        Help help = menuService.getHelpById(id);
+        return new Result(Result.SUCCESS, help,"获取成功").toJson();
     }
 
 
@@ -465,6 +533,17 @@ public class MenuFunController {
     ) throws Exception {
         Share share = menuService.deleteShare(id);
         return new Result(Result.SUCCESS, share,"删除成功").toJson();
+    }
+
+
+    @ResponseBody
+    @ApiOperation(value="获取：通过id获取分享",response = Result.class)
+    @RequestMapping(value = "/getShareById",method = RequestMethod.GET)
+    public String getShareById( @ApiParam(value = "新闻id",required = true)
+                               @RequestParam
+                               Integer id)  {
+        Share share = menuService.getShareById(id);
+        return new Result(Result.SUCCESS, share,"获取成功").toJson();
     }
 
     @ResponseBody

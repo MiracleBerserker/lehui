@@ -652,5 +652,129 @@ public class PrivilegeController {
     }
 
 
+    @ResponseBody
+    @ApiOperation(value="查询：当前账户信息",response = Result.class)
+    @RequestMapping(value = "/getAccount",method = RequestMethod.GET)
+    public String getAccount(HttpServletRequest request){
+        User user = (User) request.getSession().getAttribute("user");
+        Account account = privilegeService.getAccount(user);
+        return new Result(Result.SUCCESS, account,"查询成功").toJson();
+    }
+
+    @ResponseBody
+    @ApiOperation(value="增加：银行卡",response = Result.class)
+    @RequestMapping(value = "/addBankCard",method = RequestMethod.POST)
+    public String addBankCard(HttpServletRequest request,
+                              @ApiParam(value = "银行卡信息", required = true)
+                              @RequestBody BankCard bankCard
+    ) throws Exception {
+        User user = (User) request.getSession().getAttribute("user");
+        bankCard = privilegeService.addBankCard(bankCard,user);
+        return new Result(Result.SUCCESS, bankCard,"增加成功").toJson();
+    }
+
+
+    @ResponseBody
+    @ApiOperation(value="查询：某一张银行卡的具体信息",response = Result.class)
+    @RequestMapping(value = "/getBankCardById",method = RequestMethod.GET)
+    public String getBankCardById( @ApiParam(value = "银行卡id", required = true)
+                                    @RequestParam Integer id){
+        BankCard bankCard = privilegeService.getBankCardById(id);
+        return new Result(Result.SUCCESS, bankCard,"查询成功").toJson();
+    }
+
+    @ResponseBody
+    @ApiOperation(value="删除：某一张银行卡",response = Result.class)
+    @RequestMapping(value = "/deleteBankCard",method = RequestMethod.GET)
+    public String deleteBankCard( @ApiParam(value = "银行卡id", required = true)
+                                   @RequestParam Integer id,HttpServletRequest request){
+        User user = (User) request.getSession().getAttribute("user");
+        BankCard bankCard = privilegeService.deleteBankCard(id,user.getId());
+        return new Result(Result.SUCCESS, bankCard,"删除成功").toJson();
+    }
+
+    @ResponseBody
+    @ApiOperation(value="查询：当前用户所有银行卡",response = Result.class)
+    @RequestMapping(value = "/findAllBankCard",method = RequestMethod.GET)
+    public String findAllBankCard(HttpServletRequest request){
+        User user = (User) request.getSession().getAttribute("user");
+        List<BankCard> bankCards = privilegeService.findAllBankCard(user.getId());
+        return new Result(Result.SUCCESS, bankCards,"查询成功").toJson();
+    }
+
+    @ResponseBody
+    @ApiOperation(value="增加：发起提现申请",response = Result.class)
+    @RequestMapping(value = "/addWithdrawal",method = RequestMethod.POST)
+    public String addWithdrawal(HttpServletRequest request,
+                              @ApiParam(value = "银行卡信息", required = true)
+                              @RequestBody Withdrawal withdrawal
+    ) throws Exception {
+        User user = (User) request.getSession().getAttribute("user");
+        withdrawal = privilegeService.addWithdrawal(withdrawal,user);
+        return new Result(Result.SUCCESS, withdrawal,"发起成功").toJson();
+    }
+
+
+    @ResponseBody
+    @ApiOperation(value="变更：提现状态",response = Result.class)
+    @RequestMapping(value = "/updateWithdrawal",method = RequestMethod.GET)
+    public String updateWithdrawal(HttpServletRequest request,
+                                   @ApiParam(value = "状态 正常 审核中 处理中 未通过", required = true)
+                                   @RequestParam String state,
+                                   @ApiParam(value = "提现id", required = true)
+                                   @RequestParam Integer id
+                                   ) throws Exception {
+        User user = (User) request.getSession().getAttribute("user");
+        privilegeService.updateWithdrawal(state,id,user);
+        return new Result(Result.SUCCESS, "变更成功","变更成功").toJson();
+    }
+
+    @ResponseBody
+    @ApiOperation(value="查询：某一次提现申请的详细信息",response = Result.class)
+    @RequestMapping(value = "/getWithdrawal",method = RequestMethod.GET)
+    public String getWithdrawal( @ApiParam(value = "申请id", required = true)
+                                   @RequestParam Integer id,HttpServletRequest request){
+        User user = (User) request.getSession().getAttribute("user");
+        Withdrawal withdrawal = privilegeService.getWithdrawal(id,user);
+        return new Result(Result.SUCCESS, withdrawal,"查询成功").toJson();
+    }
+
+
+    @ResponseBody
+    @ApiOperation(value="查询：提现列表 带name模糊查询",response = Result.class)
+    @RequestMapping(value = "/findAllWithdrawal",method = RequestMethod.GET)
+    public String findAllWithdrawal(HttpServletRequest request,
+                                    @ApiParam(value = "类型 转入/转出", required = true)
+                                    @RequestParam String type,
+                                    @ApiParam(value = "状态 正常 审核中 处理中  未通过", required = true)
+                                    @RequestParam String state,
+                                    @ApiParam(value = "提现人姓名", required = false)
+                                    @RequestParam(required = false) String name
+                                    ) throws Exception {
+        User user = (User) request.getSession().getAttribute("user");
+        List<Withdrawal> withdrawals = privilegeService.findAllWithdrawal(type,state,name,user);
+        return new Result(Result.SUCCESS, withdrawals,"查询成功").toJson();
+    }
+
+    @ResponseBody
+    @ApiOperation(value="查询：乐汇简报统计信息",response = Result.class)
+    @RequestMapping(value = "/findAllWithdrawalByUser",method = RequestMethod.GET)
+    public String findAllWithdrawalByUser(HttpServletRequest request){
+        User user = (User) request.getSession().getAttribute("user");
+        List<Withdrawal> withdrawals = privilegeService.findAllWithdrawalByUser(user.getId());
+        return new Result(Result.SUCCESS, withdrawals,"查询成功").toJson();
+    }
+
+
+
+    @ResponseBody
+    @ApiOperation(value="查询：乐汇简报统计信息",response = Result.class)
+    @RequestMapping(value = "/getReport",method = RequestMethod.GET)
+    public String getReport(){
+        Map<String,String> map = privilegeService.getReport();
+        return new Result(Result.SUCCESS, map,"查询成功").toJson();
+    }
+
+
 
 }
