@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import sun.misc.BASE64Decoder;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -62,7 +63,7 @@ public class UserService {
     }
 
 
-    public User register(User user) throws Exception {
+    public User register(User user, HttpServletRequest request) throws Exception {
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -78,7 +79,32 @@ public class UserService {
         user.setState("正常");
         user.setRegisterTime(simpleDateFormat.format(new Date()));
         user.setImg(myConfig.getDefaultImg());
+        //用户类型
+        if(user.getType()==null||"".equals(user.getType())){
+            user.setType(User.TYPE_UNIT);
+        }else if(!User.TYPE_INITIAL.equals(user.getType())){
+            user.setType(User.TYPE_UNIT);
+        }
+        Integer parentId = (Integer)request.getSession().getAttribute("parentId");
+        if(user.getParentId()!=null){
+            User recommend = userDao.findById(user.getParentId()).get();
+            if(recommend==null){
+                throw new Exception("推荐人不存在 无法进行推荐注册");
+            }
+            if(!recommend.getType().equals(User.TYPE_MARKETING)&&user.getType().equals(User.TYPE_INITIAL)){
+                throw new Exception("推荐人不具备推荐代理和分销的资格");
+            }
+        }
+        user.setParentId(parentId);
+
         userDao.save(user);
+        if(user.getType().equals(User.TYPE_INITIAL)){
+            //保存初始化角色
+            RoleUser roleUser = new RoleUser();
+            roleUser.setuId(user.getId());
+            roleUser.setrId(Role.TYPE_INITIAL);
+            roleUserDao.save(roleUser);
+        }
         //保存文件替换地址
         if(qyId != null){
             if(unitDao.findById(qyId) != null){
@@ -102,10 +128,9 @@ public class UserService {
             saveUURel(unit.getId(),user.getId(),"创建中");
             unit.setArrayFiles(null);
             user.setSh(unit);
-        }else {
-            throw new Exception("必须选择或者创建企业或商会");
         }
-        //
+        //清除推荐人id
+        request.getSession().removeAttribute("parentId");
         return user;
     }
 

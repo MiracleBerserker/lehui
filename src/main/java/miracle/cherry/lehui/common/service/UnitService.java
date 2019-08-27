@@ -78,7 +78,7 @@ public class UnitService {
             roleUser.setrId(Role.SH_ROLE);
             unit.setTemplate("template_v2");
         }
-
+        unit.setCreateUserId(user.getId());
         roleUser.setuId(user.getId());
         roleUserDao.save(roleUser);
         userDao.save(user);

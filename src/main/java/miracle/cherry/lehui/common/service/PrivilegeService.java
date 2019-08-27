@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import sun.java2d.pipe.SpanShapeRenderer;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -62,6 +64,8 @@ public class PrivilegeService {
     BankCardDao bankCardDao;
     @Resource
     WithdrawalDao withdrawalDao;
+    @Resource
+    ProxyPatternDao proxyPatternDao;
 
     @Resource
     MenuService menuService;
@@ -380,6 +384,66 @@ public class PrivilegeService {
         flowBills.setUserId(user.getId());
         flowBills.setOrderNumber(UUID.randomUUID().toString().replaceAll("-",""));
         flowBillsDao.save(flowBills);
+        //给推荐人分成
+        if(user.getParentId()!=null){
+            DecimalFormat df = new DecimalFormat("0.00");
+            User uu = userDao.findById(user.getParentId()).get();
+            if(uu!=null){
+            //获取到分成比例
+            ProxyPattern proxyPattern = getProxyPatternByUser(uu);
+           if(proxyPattern==null){
+               proxyPattern = proxyPatternDao.findByRoleId(Role.TYPE_AGENT);
+           }
+            Withdrawal withdrawal = new Withdrawal();
+            Account account = getAccount(uu);
+            BigDecimal costMoney = new BigDecimal(String.valueOf(cost.getMoney()));
+            BigDecimal balanceMoney = new BigDecimal(String.valueOf(account.getBalance()));
+            costMoney = costMoney.divide(new BigDecimal("100"),2);
+            double firstShareMoney = Double.valueOf(df.format(costMoney.multiply(new BigDecimal(proxyPattern.getPercentage())).doubleValue()));
+            account.setBalance(Double.valueOf(df.format(balanceMoney.add(new BigDecimal(firstShareMoney)).doubleValue())));
+            accountDao.save(account);
+            withdrawal.setBalance(account.getBalance());
+            withdrawal.setWithdrawMoney(firstShareMoney);
+            withdrawal.setType(Withdrawal.WITHDRAWAL_TYPE_ZR);
+            withdrawal.setStartDateTime(simpleDateFormat.format(new Date()));
+            withdrawal.setState(Withdrawal.WITHDRAWAL_STATE_NORMAL);
+            withdrawal.setUserId(uu.getId());
+            withdrawal.setName(uu.getName());
+            withdrawal.setTel(uu.getAccount());
+            withdrawal.setEndDateTime(simpleDateFormat.format(new Date()));
+            withdrawal.setTitle("乐汇商户购买分成");
+            withdrawal.setContent("尊敬的用户您好："+unit.getName()+"在"+simpleDateFormat.format(new Date())+"购买了"+cost.getName()+"服务，你的代理模式为"+proxyPattern.getTitle()
+                    +",享有"+proxyPattern.getPercentage()+"%的分成福利，已将款项汇入你的账户，如需提现请发起提现");
+            withdrawalDao.save(withdrawal);
+            if(uu.getParentId()!=null){
+                User u = userDao.findById(uu.getParentId()).get();
+                if(u.getType().equals(User.TYPE_MARKETING)){
+                    account = getAccount(u);
+                    proxyPattern = proxyPatternDao.findByRoleId(Role.TYPE_MARKETING);
+                    double sencondShareMoney = Double.valueOf(df.format(new BigDecimal(String.valueOf(firstShareMoney))
+                            .divide(new BigDecimal("100"))
+                            .multiply(new BigDecimal(String.valueOf(proxyPattern.getPercentage()))).doubleValue()));
+                    account.setBalance(Double.valueOf(df.format(new BigDecimal(String.valueOf(account.getBalance()))
+                            .add(new BigDecimal(String.valueOf(sencondShareMoney))).doubleValue())));
+                    accountDao.save(account);
+                    withdrawal = new Withdrawal();
+                    withdrawal.setBalance(account.getBalance());
+                    withdrawal.setWithdrawMoney(sencondShareMoney);
+                    withdrawal.setType(Withdrawal.WITHDRAWAL_TYPE_ZR);
+                    withdrawal.setStartDateTime(simpleDateFormat.format(new Date()));
+                    withdrawal.setState(Withdrawal.WITHDRAWAL_STATE_NORMAL);
+                    withdrawal.setUserId(u.getId());
+                    withdrawal.setName(u.getName());
+                    withdrawal.setTel(u.getAccount());
+                    withdrawal.setEndDateTime(simpleDateFormat.format(new Date()));
+                    withdrawal.setTitle("发展的代理或者分销分成");
+                    withdrawal.setContent("尊敬的用户您好，您发展的下级"+uu.getName()+"给你分红");
+                    withdrawalDao.save(withdrawal);
+                }
+            }
+            }
+
+        }
         return payment;
 
     }
@@ -462,16 +526,22 @@ public class PrivilegeService {
        if(feedback.getId()!=null){
            return null;
        }
-       Unit unit = unitDao.findById(feedback.getUnitId()).get();
-       if(unit==null){
-           return null;
-       }
+        if(feedback.getUnitId()!=null){
+            Unit unit = unitDao.findById(feedback.getUnitId()).get();
+            if(unit!=null){
+                feedback.setUnitId(unit.getId());
+                feedback.setUnitName(unit.getName());
+                feedback.setTel(unit.getTel());
+            }
+       }else {
+            feedback.setUnitId(0);
+            feedback.setUnitName(user.getName());
+            feedback.setTel(user.getAccount());
+        }
        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
        feedback.setDate(simpleDateFormat.format(new Date()));
        feedback.setUserName(user.getName());
-       feedback.setUnitId(unit.getId());
-       feedback.setUnitName(unit.getName());
-       feedback.setTel(unit.getTel());
+       feedback.setUserId(user.getId());
        feedbackDao.save(feedback);
        return feedback;
     }
@@ -503,7 +573,7 @@ public class PrivilegeService {
         if(account == null){
             account = new Account();
             account.setUserId(user.getId());
-            account.setBalance(0);
+            account.setBalance(0.00);
             account.setState(Account.ACCOUNT_STATE_NORMAL);
             accountDao.save(account);
         }
@@ -545,6 +615,7 @@ public class PrivilegeService {
 
     public Withdrawal addWithdrawal(Withdrawal withdrawal,User user) throws Exception {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        DecimalFormat df = new DecimalFormat("0.00");
         Account account = accountDao.findByUserIdAndState(user.getId(),Account.ACCOUNT_STATE_NORMAL);
         withdrawal.setWithdrawMoney(Math.abs(withdrawal.getWithdrawMoney()));
         if(account==null){
@@ -566,7 +637,7 @@ public class PrivilegeService {
             withdrawal.setTel(user.getAccount());
             withdrawal.setName(user.getName());
             withdrawal.setUserId(user.getId());
-            account.setBalance(account.getBalance()-withdrawal.getWithdrawMoney());
+            account.setBalance(Double.valueOf(df.format(new BigDecimal(String.valueOf(account.getBalance())).subtract(new BigDecimal(String.valueOf(withdrawal.getWithdrawMoney()))).doubleValue())));
             withdrawal.setBalance(account.getBalance());
             accountDao.save(account);
         }else{
@@ -599,7 +670,7 @@ public class PrivilegeService {
             return;
         }
 
-        if(user.getShId()!=Unit.ADMIN_SHID){
+        if(!user.getShId().equals(Unit.ADMIN_SHID)){
             throw new Exception("非法操作行为 请停止操作");
         }
         if(Withdrawal.WITHDRAWAL_STATE_SHZ.equals(withdrawal.getState())&&state.equals(Withdrawal.WITHDRAWAL_STATE_CLZ)){
@@ -631,7 +702,7 @@ public class PrivilegeService {
 
     public Withdrawal getWithdrawal(Integer id,User user){
         Withdrawal withdrawal = null;
-        if(user.getShId()!=Unit.ADMIN_SHID){
+        if(!user.getShId().equals(Unit.ADMIN_SHID)){
             withdrawal = withdrawalDao.findById(id).get();
         }else {
             withdrawal = withdrawalDao.findByIdAndUserId(id,user.getId());
@@ -641,7 +712,7 @@ public class PrivilegeService {
     }
 
     public List<Withdrawal> findAllWithdrawal(String type,String state,String name,User user) throws Exception {
-        if(user.getShId()!=Unit.ADMIN_SHID){
+        if(!user.getShId().equals(Unit.ADMIN_SHID)){
             throw new Exception("非法操作行为 请停止操作");
         }
         List<Withdrawal> withdrawals = null;
@@ -657,9 +728,18 @@ public class PrivilegeService {
     }
 
 
-    public List<Withdrawal> findAllWithdrawalByUser(Integer userId){
+    public List<Withdrawal> findAllWithdrawalByUser(Integer userId ,String state,String type){
         List<Withdrawal> withdrawals = null;
-        withdrawals = withdrawalDao.findAllByUserId(userId);
+        if(state==null&&type==null){
+            withdrawals = withdrawalDao.findAllByUserId(userId);
+        }else if(state!=null&&type==null){
+            withdrawals = withdrawalDao.findAllByUserIdAndState(userId,state);
+        }else if(state==null&&type!=null){
+            withdrawals = withdrawalDao.findAllByUserIdAndType(userId,type);
+        }else {
+            withdrawals = withdrawalDao.findAllByUserIdAndTypeAndState(userId,type,state);
+        }
+
         return withdrawals;
     }
 
@@ -675,6 +755,72 @@ public class PrivilegeService {
         map.put("dayUser",userDao.getDayUser().get("num"));
         map.put("monthUser",userDao.getMonthUser().get("num"));
         map.put("allUser",userDao.getAllUser().get("num"));
+        return map;
+    }
+
+    /**
+     * 返回所有可供选择的代理模式
+     * @return
+     */
+    public List<ProxyPattern> getAllProxyPattern(){
+        return proxyPatternDao.findAll();
+    }
+
+    /**
+     * 修改代理模式
+     * @param proxyPattern
+     * @return
+     */
+    public ProxyPattern updateProxyPattern(ProxyPattern proxyPattern){
+        //获取数据库中真实存储的数据
+        ProxyPattern relp = proxyPatternDao.findById(proxyPattern.getId()).get();
+        relp.setPercentage(proxyPattern.getPercentage());
+        relp.setContent(proxyPattern.getContent());
+        relp.setPrice(proxyPattern.getPrice());
+        proxyPatternDao.saveAndFlush(relp);
+        return relp;
+    }
+
+    /**
+     * 获取当前用户的代理模式
+     * @param user
+     * @return
+     */
+    public ProxyPattern getProxyPatternByUser(User user){
+        RoleUser roleUser = roleUserDao.findAllByUId(user.getId()).get(0);
+        ProxyPattern proxyPattern = proxyPatternDao.findByRoleId(roleUser.getrId());
+        return proxyPattern;
+    }
+
+
+    /**
+     * 切换代理模式
+     * @param id
+     * @return
+     */
+    public ProxyPattern changeProxyPattern(Integer id,User user){
+        ProxyPattern proxyPattern = proxyPatternDao.findById(id).get();
+        RoleUser roleUser = roleUserDao.findAllByUId(user.getId()).get(0);
+        roleUser.setrId(proxyPattern.getRoleId());
+        roleUserDao.save(roleUser);
+        User uu = userDao.findById(user.getId()).get();
+        uu.setType(proxyPattern.getTitle().trim());
+        userDao.save(uu);
+        return proxyPattern;
+    }
+
+    /**
+     * 统计收入信息
+     */
+
+    public Map<String,String> getAccountReport(User user){
+        Map<String,String> map = new HashMap<>();
+        map.put("dayMoney",withdrawalDao.getDayMoney(user.getId()).get("num"));
+        map.put("monthMoney",withdrawalDao.getMonthMoney(user.getId()).get("num"));
+        map.put("allMoney",withdrawalDao.getAllMoney(user.getId()).get("num"));
+        map.put("dayUser",withdrawalDao.getDayUser(user.getId()).get("num"));
+        map.put("monthUser",withdrawalDao.getMonthUser(user.getId()).get("num"));
+        map.put("allUser",withdrawalDao.getAllUser(user.getId()).get("num"));
         return map;
     }
 

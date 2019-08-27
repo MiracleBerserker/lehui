@@ -32,7 +32,7 @@ public class FlowBills implements Serializable {
     @Column
     private String createTime;
     @Column
-    private Integer money;
+    private Double money;
     @Column
     private String  orderNumber;
     @Column
@@ -94,11 +94,11 @@ public class FlowBills implements Serializable {
         this.createTime = createTime;
     }
 
-    public Integer getMoney() {
+    public Double getMoney() {
         return money;
     }
 
-    public void setMoney(Integer money) {
+    public void setMoney(Double money) {
         this.money = money;
     }
 

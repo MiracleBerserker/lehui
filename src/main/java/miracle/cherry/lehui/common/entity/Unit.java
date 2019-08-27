@@ -48,6 +48,8 @@ public class Unit implements Serializable {
     private  String url;
     @Column
     private String template;
+    @Column
+    private Integer createUserId;
     @Transient
     private List<String> arrayFiles;
 
@@ -153,5 +155,13 @@ public class Unit implements Serializable {
 
     public void setTemplate(String template) {
         this.template = template;
+    }
+
+    public Integer getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
     }
 }

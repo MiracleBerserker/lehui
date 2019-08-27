@@ -19,6 +19,11 @@ public class User implements Serializable {
     public static final String STATE_PROHIBIT = "禁止";
     public static final String STATE_NORMAL = "正常";
     public static final String STATE_RELOGIN = "重新登录";
+    public static final String TYPE_UNIT="组织";
+    public static final String TYPE_INITIAL="营销系统";
+    public static final String TYPE_AGENT="代理";
+    public static final String TYPE_DISTRIBUTION="分销";
+    public static final String TYPE_MARKETING="全员营销";
     private static final long serialVersionUID = 8735132096673200831L;
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -45,6 +50,8 @@ public class User implements Serializable {
     private String registerTime;
     @Column(length = 50)
     private String type;
+    @Column
+    private Integer parentId;
     @Transient
     private Unit qy;
     @Transient
@@ -163,6 +170,14 @@ public class User implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
     }
 
     @Override

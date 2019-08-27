@@ -80,9 +80,9 @@ public class AccountController {
                     user.setSh(unitService.getById(user.getShId()));
                 }
                 request.getSession().setAttribute("user",user);
-                return new Result(Result.SUCCESS,null,"登录成功").toJson();
+                return new Result(Result.SUCCESS,user,"登录成功").toJson();
             }else {
-                return new Result(Result.FAIL,null,"账号密码错误").toJson();
+                return new Result(Result.FAIL,user,"账号密码错误").toJson();
             }
     }
     @ResponseBody
@@ -92,7 +92,7 @@ public class AccountController {
             @ApiParam(value = "用标准json格式上传数据  ", required = true)
             @RequestBody(required = true) User user,
             HttpServletRequest request) throws Exception {
-        user = userService.register(user);
+        user = userService.register(user,request);
         //查询注入企业和上回
         if(user.getQyId()!=null){
             user.setQy(unitService.getById(user.getQyId()));
@@ -268,5 +268,30 @@ public class AccountController {
         List<SystemHelp> systemHelps = privilegeService.getAllSystemHelp(type,problem);
         return new Result(Result.SUCCESS, systemHelps,"查询成功").toJson();
     }
+
+
+    /**
+     * 跳转管理页面 根据用户是否登录进行跳转
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @ResponseBody
+    @ApiOperation(value="推荐注册跳转接口",response = Result.class)
+    @RequestMapping(value = "/jumpManagerParam",method = RequestMethod.GET)
+    public void jumpManagerParam(HttpServletRequest request, HttpServletResponse response,
+                                 @ApiParam(value = "推荐码 --------实际上是用户id", required = true)
+                                 @RequestParam(required = true) Integer parentId,
+                                 @ApiParam(value = "跳转页面的地址 node/management/chember_manage_index.html 类似这种", required = true)
+                                 @RequestParam(required = true) String path
+    ) throws Exception {
+        //重定向的响应代码
+        response.setStatus(302);
+        //将推荐id注入session中
+        request.getSession().setAttribute("parentId",parentId);
+        response.sendRedirect(path);
+    }
+
+
 
 }

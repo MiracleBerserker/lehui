@@ -27,7 +27,7 @@ public class Account implements Serializable {
 
     //余额
     @Column
-    private Integer balance;
+    private Double balance;
     //用户id
     @Column
     private Integer userId;
@@ -43,11 +43,11 @@ public class Account implements Serializable {
         this.id = id;
     }
 
-    public Integer getBalance() {
+    public Double getBalance() {
         return balance;
     }
 
-    public void setBalance(Integer balance) {
+    public void setBalance(Double balance) {
         this.balance = balance;
     }
 

@@ -34,7 +34,7 @@ public class Cost  implements Serializable {
     @Column
     private String level;
     @Column
-    private Integer money;
+    private Double money;
     @Column
     private String measurement;
     @Column
@@ -82,11 +82,11 @@ public class Cost  implements Serializable {
         this.level = level;
     }
 
-    public Integer getMoney() {
+    public Double getMoney() {
         return money;
     }
 
-    public void setMoney(Integer money) {
+    public void setMoney(Double money) {
         this.money = money;
     }
 

@@ -32,16 +32,16 @@ public class Withdrawal implements Serializable {
     //用户银行卡绑定电话
     private String bankTel;
     //操作金额
-    private Integer withdrawMoney;
+    private Double withdrawMoney;
     //操作之后账户余额
-    private Integer balance;
+    private Double balance;
     //用户操作的银行
     private String bankName;
     //银行卡号
     private String bankCard;
     //此处操作的标题
     private String title;
-    //操作的内容说明
+    @Column(columnDefinition = "text")
     private String content;
     //操作类型  转入 / 转出
     private String type;
@@ -81,19 +81,19 @@ public class Withdrawal implements Serializable {
     }
 
 
-    public Integer getWithdrawMoney() {
+    public Double getWithdrawMoney() {
         return withdrawMoney;
     }
 
-    public void setWithdrawMoney(Integer withdrawMoney) {
+    public void setWithdrawMoney(Double withdrawMoney) {
         this.withdrawMoney = withdrawMoney;
     }
 
-    public Integer getBalance() {
+    public Double getBalance() {
         return balance;
     }
 
-    public void setBalance(Integer balance) {
+    public void setBalance(Double balance) {
         this.balance = balance;
     }
 
@@ -184,4 +184,5 @@ public class Withdrawal implements Serializable {
     public void setBankCardId(Integer bankCardId) {
         this.bankCardId = bankCardId;
     }
+
 }

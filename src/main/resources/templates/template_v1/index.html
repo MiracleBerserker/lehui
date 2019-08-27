@@ -208,10 +208,12 @@
         </div>
     </div>
     <div class="row nav-buttons">
+        <a th:href="@{'/account/jumpManagerParam?parentId='+${unit.createUserId}+'&path=/node/stage/stageindex.html'}">
         <div class="col-xs-3">
             <div class="row button"><img src="/img/icon/source_system.png" alt=""></div>
             <div class="row text">乐汇</div>
         </div>
+        </a>
         <div class="col-xs-3">
             <div class="row button"><img src="/img/icon/service_sale.png" alt=""></div>
             <div class="row text">乐服</div>
@@ -245,10 +247,6 @@
 <script src="/js/chember_index.js"></script>
 </body>
 <script>
-    // //页面滚动到顶部
-    // $('.scroll-to-top').bind('click', function () {
-    //     $(window).scrollTop(0);
-    // });
 
  $("#submit").on('click',function () {
      //获取值

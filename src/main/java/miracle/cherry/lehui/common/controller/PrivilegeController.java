@@ -706,7 +706,7 @@ public class PrivilegeController {
     @ApiOperation(value="增加：发起提现申请",response = Result.class)
     @RequestMapping(value = "/addWithdrawal",method = RequestMethod.POST)
     public String addWithdrawal(HttpServletRequest request,
-                              @ApiParam(value = "银行卡信息", required = true)
+                              @ApiParam(value = "提现相关必要信息", required = true)
                               @RequestBody Withdrawal withdrawal
     ) throws Exception {
         User user = (User) request.getSession().getAttribute("user");
@@ -757,11 +757,16 @@ public class PrivilegeController {
     }
 
     @ResponseBody
-    @ApiOperation(value="查询：乐汇简报统计信息",response = Result.class)
+    @ApiOperation(value="查询：用户所有转入转出的记录",response = Result.class)
     @RequestMapping(value = "/findAllWithdrawalByUser",method = RequestMethod.GET)
-    public String findAllWithdrawalByUser(HttpServletRequest request){
+    public String findAllWithdrawalByUser(HttpServletRequest request,
+                                          @ApiParam(value = "类型 转入/转出", required = false)
+                                          @RequestParam(required = false) String type,
+                                          @ApiParam(value = "正常/未通过/处理中/审核中", required = false)
+                                          @RequestParam(required = false) String state
+                                          ){
         User user = (User) request.getSession().getAttribute("user");
-        List<Withdrawal> withdrawals = privilegeService.findAllWithdrawalByUser(user.getId());
+        List<Withdrawal> withdrawals = privilegeService.findAllWithdrawalByUser(user.getId(),state,type);
         return new Result(Result.SUCCESS, withdrawals,"查询成功").toJson();
     }
 
@@ -774,7 +779,55 @@ public class PrivilegeController {
         Map<String,String> map = privilegeService.getReport();
         return new Result(Result.SUCCESS, map,"查询成功").toJson();
     }
+    @ResponseBody
+    @ApiOperation(value="查询：所有的代理模式",response = Result.class)
+    @RequestMapping(value = "/getAllProxyPattern",method = RequestMethod.GET)
+    public String getAllProxyPattern(){
+        List<ProxyPattern> proxyPatterns = privilegeService.getAllProxyPattern();
+        return new Result(Result.SUCCESS, proxyPatterns,"查询成功").toJson();
+    }
 
+
+    @ResponseBody
+    @ApiOperation(value="增加：变更代理模式",response = Result.class)
+    @RequestMapping(value = "/updateProxyPattern",method = RequestMethod.POST)
+    public String updateProxyPattern(HttpServletRequest request,
+                                @ApiParam(value = "代理模式信息", required = true)
+                                @RequestBody ProxyPattern proxyPattern
+    ) throws Exception {
+        proxyPattern = privilegeService.updateProxyPattern(proxyPattern);
+        return new Result(Result.SUCCESS, proxyPattern,"发起成功").toJson();
+    }
+
+    @ResponseBody
+    @ApiOperation(value="查询：当前用户的代理模式",response = Result.class)
+    @RequestMapping(value = "/getProxyPatternByUser",method = RequestMethod.GET)
+    public String getProxyPatternByUser(HttpServletRequest request){
+        User user = (User) request.getSession().getAttribute("user");
+        ProxyPattern proxyPattern = privilegeService.getProxyPatternByUser(user);
+        return new Result(Result.SUCCESS, proxyPattern,"查询成功").toJson();
+    }
+
+    @ResponseBody
+    @ApiOperation(value="切换：当前用户的代理模式",response = Result.class)
+    @RequestMapping(value = "/changeProxyPattern",method = RequestMethod.GET)
+    public String changeProxyPattern(HttpServletRequest request,
+                                     @ApiParam(value = "代理模式id", required = true)
+                                     @RequestParam Integer id
+                                     ){
+        User user = (User) request.getSession().getAttribute("user");
+        ProxyPattern proxyPattern = privilegeService.changeProxyPattern(id,user);
+        return new Result(Result.SUCCESS, proxyPattern,"查询成功").toJson();
+    }
+
+    @ResponseBody
+    @ApiOperation(value="查询：当前营销系统用户的统计信息",response = Result.class)
+    @RequestMapping(value = "/getAccountReport",method = RequestMethod.GET)
+    public String getAccountReport(HttpServletRequest request){
+        User user = (User) request.getSession().getAttribute("user");
+        Map<String,String> map = privilegeService.getAccountReport(user);
+        return new Result(Result.SUCCESS, map,"查询成功").toJson();
+    }
 
 
 }
